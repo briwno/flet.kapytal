@@ -1,11 +1,10 @@
 import flet as ft
 
-
-
-def get_login_screen(on_login: callable) -> ft.Container:
+def get_login_screen(page: ft.Page, on_login: callable, switch_to_register: callable) -> ft.Container:
     """
     Retorna o layout da tela de login.
     :param on_login: Função chamada ao clicar no botão "Entrar".
+    :param switch_to_register: Função chamada ao clicar no botão "Registrar".
     """
     return ft.Container(
         width=400,
@@ -104,7 +103,7 @@ def get_login_screen(on_login: callable) -> ft.Container:
                                 "Registrar",
                                 bgcolor="#1c1c1c",  # Cor de fundo do painel
                                 color="#e4b849",  # Dourado
-                                on_click=lambda _: print("Registro"),
+                                on_click=lambda _: switch_to_register(),
                                 width=300,
                                 height=50,
                                 style=ft.ButtonStyle(
@@ -129,9 +128,8 @@ def get_login_screen(on_login: callable) -> ft.Container:
                                     ),
                                     ft.TextButton(
                                         "Registrar",
-                                        on_click= switch_to_register,
+                                        on_click=lambda _: switch_to_register(),
                                         style=ft.ButtonStyle(color="#e4b849"),
-
                                     ),
                                 ],
                                 alignment=ft.MainAxisAlignment.CENTER,
@@ -145,14 +143,4 @@ def get_login_screen(on_login: callable) -> ft.Container:
                 ),
             ]
         ),
-    ) 
-    
-def switch_to_register():
-    print("Trocar para a tela de registro")
-    # Aqui você pode implementar a lógica para trocar para a tela de registro
-    # Isso pode envolver a limpeza da tela atual e a adição do layout de registro
-    
-
-
-    
-    
+    )
