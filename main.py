@@ -2,6 +2,7 @@ import flet as ft
 import threading
 from screens.login_screen import get_login_screen
 from screens.register_screen import get_register_screen
+from screens.home_screen import get_home_screen
 from layout import create_iphone_layout
 
 
@@ -21,7 +22,7 @@ def main(page: ft.Page):
     def switch_to_login():
         login_screen = get_login_screen(
             page,
-            on_login=lambda: print("Login clicado!"),
+            on_login=switch_to_home,
             switch_to_register=switch_to_register
         )
         page.clean()
@@ -37,6 +38,19 @@ def main(page: ft.Page):
         page.clean()
         page.add(ft.Row([create_iphone_layout(register_screen)], alignment=ft.MainAxisAlignment.CENTER))
         page.update()
+        
+    def switch_to_home():
+        # Aqui você pode definir o que acontece quando o usuário faz login com sucesso
+        print("Login bem-sucedido!")
+        # Por exemplo, você pode redirecionar para uma tela inicial ou dashboard
+        home_screen = get_home_screen(
+            page,
+            on_logout=switch_to_login
+        )
+        page.clean()
+        page.add(ft.Row([create_iphone_layout(home_screen)], alignment=ft.MainAxisAlignment.CENTER))
+        page.update()
+        
 
     # Tela inicial
     initial_screen = ft.Container(
@@ -67,7 +81,7 @@ def main(page: ft.Page):
 
     # Exibe a tela inicial e troca para login após 0.1 segundos
     page.add(ft.Row([create_iphone_layout(initial_screen)], alignment=ft.MainAxisAlignment.CENTER))
-    threading.Timer(0.1, switch_to_login).start()
+    threading.Timer(1, switch_to_login).start()
 
 
 # Inicializa o aplicativo
