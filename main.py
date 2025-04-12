@@ -18,7 +18,7 @@ def main(page: ft.Page):
     page.bgcolor = ft.colors.BLACK
     page.update()
 
-    # Funções de troca de tela
+    # Funções de troca de tela  ''
     def switch_to_login():
         login_screen = get_login_screen(
             page,
@@ -40,9 +40,7 @@ def main(page: ft.Page):
         page.update()
         
     def switch_to_home():
-        # Aqui você pode definir o que acontece quando o usuário faz login com sucesso
         print("Login bem-sucedido!")
-        # Por exemplo, você pode redirecionar para uma tela inicial ou dashboard
         home_screen = get_home_screen(
             page,
             on_logout=switch_to_login
