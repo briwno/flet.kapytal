@@ -6,6 +6,44 @@ def get_register_screen(page: ft.Page, on_register: callable, switch_to_login: c
     :param on_register: Função chamada ao clicar no botão "Registrar".
     :param switch_to_login: Função chamada ao clicar no botão "Já tem uma conta? Logar".
     """
+    # Variáveis para armazenar os valores dos campos
+    name_field = ft.TextField(
+        hint_text="Digite seu nome completo",
+        border_color="#e4b849",  # Dourado
+        border_radius=ft.border_radius.all(20),
+        text_style=ft.TextStyle(color=ft.colors.WHITE),
+    )
+    
+    email_field = ft.TextField(
+        hint_text="exemplo@exemplo.com",
+        border_color="#e4b849",  # Dourado
+        border_radius=ft.border_radius.all(20),
+        text_style=ft.TextStyle(color=ft.colors.WHITE),
+    )
+    
+    password_field = ft.TextField(
+        hint_text="●●●●●●●●",
+        password=True,
+        border_color="#e4b849",  # Dourado
+        border_radius=ft.border_radius.all(20),
+        text_style=ft.TextStyle(color=ft.colors.WHITE),
+    )
+    
+    confirm_password_field = ft.TextField(
+        hint_text="●●●●●●●●",
+        password=True,
+        border_color="#e4b849",  # Dourado
+        border_radius=ft.border_radius.all(20),
+        text_style=ft.TextStyle(color=ft.colors.WHITE),
+    )
+    
+    def handle_register(e):
+        if all([name_field.value, email_field.value, password_field.value, confirm_password_field.value]):
+            if password_field.value == confirm_password_field.value:
+                on_register()
+            else:
+                print("As senhas não coincidem")
+    
     return ft.Container(
         width=400,
         height=830,
@@ -60,52 +98,30 @@ def get_register_screen(page: ft.Page, on_register: callable, switch_to_login: c
                                 size=14,
                                 color=ft.colors.WHITE,
                             ),
-                            ft.TextField(
-                                hint_text="Digite seu nome completo",
-                                border_color="#e4b849",  # Dourado
-                                border_radius=ft.border_radius.all(20),
-                                text_style=ft.TextStyle(color=ft.colors.WHITE),
-                            ),
+                            name_field,
                             ft.Text(
                                 "Email",
                                 size=14,
                                 color=ft.colors.WHITE,
                             ),
-                            ft.TextField(
-                                hint_text="exemplo@exemplo.com",
-                                border_color="#e4b849",  # Dourado
-                                border_radius=ft.border_radius.all(20),
-                                text_style=ft.TextStyle(color=ft.colors.WHITE),
-                            ),
+                            email_field,
                             ft.Text(
                                 "Senha",
                                 size=14,
                                 color=ft.colors.WHITE,
                             ),
-                            ft.TextField(
-                                hint_text="●●●●●●●●",
-                                password=True,
-                                border_color="#e4b849",  # Dourado
-                                border_radius=ft.border_radius.all(20),
-                                text_style=ft.TextStyle(color=ft.colors.WHITE),
-                            ),
+                            password_field,
                             ft.Text(
                                 "Confirmar Senha",
                                 size=14,
                                 color=ft.colors.WHITE,
                             ),
-                            ft.TextField(
-                                hint_text="●●●●●●●●",
-                                password=True,
-                                border_color="#e4b849",  # Dourado
-                                border_radius=ft.border_radius.all(20),
-                                text_style=ft.TextStyle(color=ft.colors.WHITE),
-                            ),
+                            confirm_password_field,
                             ft.ElevatedButton(
                                 "Registrar",
                                 bgcolor="#e4b849",  # Dourado
                                 color=ft.colors.BLACK,
-                                on_click=lambda _: on_register(),
+                                on_click=handle_register,
                                 width=300,
                                 height=50,
                                 style=ft.ButtonStyle(

@@ -6,6 +6,32 @@ def get_login_screen(page: ft.Page, on_login: callable, switch_to_register: call
     :param on_login: Função chamada ao clicar no botão "Entrar".
     :param switch_to_register: Função chamada ao clicar no botão "Registrar".
     """
+    # Variáveis para armazenar os valores dos campos
+    email_field = ft.TextField(
+        hint_text="exemplo@exemplo.com",
+        border_color="#e4b849",  # Dourado
+        border_radius=ft.border_radius.all(20),
+        text_style=ft.TextStyle(color=ft.colors.WHITE),
+    )
+    
+    password_field = ft.TextField(
+        hint_text="●●●●●●●●",
+        password=True,
+        border_color="#e4b849",  # Dourado
+        border_radius=ft.border_radius.all(20),
+        text_style=ft.TextStyle(color=ft.colors.WHITE),
+    )
+    
+    def handle_login(e):
+        print("Botão de login clicado")
+        print(f"Email: {email_field.value}")
+        print(f"Senha: {password_field.value}")
+        if email_field.value and password_field.value:
+            print("Campos preenchidos, chamando on_login")
+            on_login()
+        else:
+            print("Campos não preenchidos")
+    
     return ft.Container(
         width=400,
         height=830,
@@ -60,24 +86,13 @@ def get_login_screen(page: ft.Page, on_login: callable, switch_to_register: call
                                 size=14,
                                 color=ft.colors.WHITE,
                             ),
-                            ft.TextField(
-                                hint_text="exemplo@exemplo.com",
-                                border_color="#e4b849",  # Dourado
-                                border_radius=ft.border_radius.all(20),
-                                text_style=ft.TextStyle(color=ft.colors.WHITE),
-                            ),
+                            email_field,
                             ft.Text(
                                 "Senha",
                                 size=14,
                                 color=ft.colors.WHITE,
                             ),
-                            ft.TextField(
-                                hint_text="●●●●●●●●",
-                                password=True,
-                                border_color="#e4b849",  # Dourado
-                                border_radius=ft.border_radius.all(20),
-                                text_style=ft.TextStyle(color=ft.colors.WHITE),
-                            ),
+                            password_field,
                             ft.Row(
                                 [
                                     ft.TextButton(
@@ -92,7 +107,7 @@ def get_login_screen(page: ft.Page, on_login: callable, switch_to_register: call
                                 "Entrar",
                                 bgcolor="#e4b849",  # Dourado
                                 color=ft.colors.BLACK,
-                                on_click=lambda _: on_login(),
+                                on_click=handle_login,
                                 width=300,
                                 height=50,
                                 style=ft.ButtonStyle(
