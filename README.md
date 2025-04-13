@@ -44,7 +44,7 @@ pip install flet
 3. Rode o projeto:
 
 ```bash
-python main.py
+flet main.py
 ```
 
 > **Requisitos:** Python 3.10+
