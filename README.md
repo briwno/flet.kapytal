@@ -22,7 +22,7 @@ O **Kapytal** é um aplicativo de gestão financeira que busca ajudar pessoas e 
 ## 🧱 Tecnologias Utilizadas
 
 - [Python](https://www.python.org/)
-- [Flet](https://flet.dev/)
+- [Flet](https://flet.dev/) (UI)
 - [MySQL](https://www.mysql.com/) *(planejado para o backend)*
 - Figma *(para o protótipo de interface)*
 
@@ -33,3 +33,27 @@ O **Kapytal** é um aplicativo de gestão financeira que busca ajudar pessoas e 
 ```bash
 git clone https://github.com/briwno/flet.kapytal.git
 cd flet.kapytal
+```
+
+2. Instale as dependências:
+
+```bash
+pip install flet
+```
+
+3. Rode o projeto:
+
+```bash
+python main.py
+```
+
+> **Requisitos:** Python 3.10+
+
+## 🧑‍🎓 Sobre o Desenvolvedor
+
+Desenvolvido por **[briwno](https://github.com/briwno)** como parte de um projeto acadêmico na [Unifacear](https://www.unifacear.edu.br/).
+
+## 📌 Status do Projeto
+
+🚧 **Em desenvolvimento**  
+Atualmente, estou focando na construção da interface e estrutura das telas antes da integração com banco de dados e autenticação de usuários.
