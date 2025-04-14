@@ -1,7 +1,7 @@
 import flet as ft
 from components.navbar import get_navbar
 
-def get_home_screen(page: ft.Page, on_logout: callable, on_add_transaction: callable) -> ft.Container:
+def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callable) -> ft.Container:
     # Definindo cores personalizadas
     GOLD = "#FFD700"
     SOFT_GOLD = "#F7D679"
@@ -12,9 +12,9 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_add_transaction: call
 
     def handle_logout(e):
         on_logout()
-
-    def handle_add_transaction(e):
-        on_add_transaction()
+        
+    def handle_notification(e):
+        on_notification()   
 
     return ft.Container(
         width=400,
@@ -34,6 +34,7 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_add_transaction: call
                                     [
                                         ft.Text(
                                             "Olá, Bem-vindo de volta",
+                                            
                                             size=20,
                                             weight=ft.FontWeight.BOLD,
                                             color=SOFT_GOLD,
@@ -50,15 +51,10 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_add_transaction: call
                                 ft.Row(
                                     [
                                         ft.IconButton(
-                                            icon=ft.icons.ADD,
-                                            icon_color=SOFT_GOLD,
-                                            icon_size=22,
-                                            on_click=handle_add_transaction,
-                                        ),
-                                        ft.IconButton(
                                             icon=ft.icons.NOTIFICATIONS_NONE,
                                             icon_color=SOFT_GOLD,
                                             icon_size=22,
+                                            on_click=handle_notification,
                                         ),
                                     ],
                                     spacing=5,

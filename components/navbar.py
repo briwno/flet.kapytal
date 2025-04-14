@@ -5,6 +5,36 @@ def get_navbar(page: ft.Page, active_index: int = 0) -> ft.Container:
     DARK_BG = "#121212"
     SOFT_GOLD = "#F7D679"
     
+    def handle_nav(e, index):
+        if index == 0:  # Home
+            page.go("/home")
+        elif index == 1:  # Análise
+            # page.go("/analysis")
+            print("Análise não implementada")
+            ft.AlertDialog(
+                title="Análise",
+                content="Essa funcionalidade ainda não está implementada.",
+                actions=[ft.TextButton("OK", on_click=lambda e: page.dialog.close())],
+            ).show(page)
+        elif index == 2:  # Transações
+            page.go("/transactions")
+        elif index == 3:  # Carteira
+            # page.go("/wallet")
+            print("Carteira não implementada")
+            ft.AlertDialog(
+                title="Carteira",
+                content="Essa funcionalidade ainda não está implementada.",
+                actions=[ft.TextButton("OK", on_click=lambda e: page.dialog.close())],
+            ).show(page)
+        elif index == 4:  # Perfil
+            # page.go("/profile")
+            print("Perfil não implementado")
+            ft.AlertDialog(
+                title="Perfil",
+                content="Essa funcionalidade ainda não está implementada.",
+                actions=[ft.TextButton("OK", on_click=lambda e: page.dialog.close())],
+            ).show(page)
+            
     return ft.Container(
         content=ft.Container(
             content=ft.Row(
@@ -14,30 +44,40 @@ def get_navbar(page: ft.Page, active_index: int = 0) -> ft.Container:
                         icon_color=DARK_BG,
                         icon_size=22,
                         opacity=1.0 if active_index == 0 else 0.5,
+                        on_click=lambda e: handle_nav(e, 0),
                     ),
                     ft.IconButton(
-                        icon=ft.icons.SEARCH,
+                        icon=ft.icons.INSERT_CHART_OUTLINED,
                         icon_color=DARK_BG,
                         icon_size=22,
                         opacity=1.0 if active_index == 1 else 0.5,
+                        on_click=lambda e: handle_nav(e, 1),
                     ),
-                    ft.IconButton(
-                        icon=ft.icons.SWAP_HORIZ,
-                        icon_color=DARK_BG,
-                        icon_size=22,
-                        opacity=1.0 if active_index == 2 else 0.5,
+                    ft.Container(
+                        content=ft.IconButton(
+                            icon=ft.icons.SWAP_HORIZ,
+                            icon_color=DARK_BG,
+                            icon_size=22,
+                            opacity=1.0 if active_index == 2 else 0.5,
+                            on_click=lambda e: handle_nav(e, 2),
+                        ),
+                        bgcolor=SOFT_GOLD,
+                        shape=ft.BoxShape.CIRCLE,
+                        border=ft.border.all(2, DARK_BG) if active_index == 2 else None,
                     ),
                     ft.IconButton(
                         icon=ft.icons.ACCOUNT_BALANCE_WALLET,
                         icon_color=DARK_BG,
                         icon_size=22,
                         opacity=1.0 if active_index == 3 else 0.5,
+                        on_click=lambda e: handle_nav(e, 3),
                     ),
                     ft.IconButton(
                         icon=ft.icons.PERSON,
                         icon_color=DARK_BG,
                         icon_size=22,
                         opacity=1.0 if active_index == 4 else 0.5,
+                        on_click=lambda e: handle_nav(e, 4),
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,

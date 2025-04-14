@@ -4,6 +4,8 @@ from screens.login_screen import get_login_screen
 from screens.register_screen import get_register_screen
 from screens.home_screen import get_home_screen
 from screens.add_transaction_screen import get_add_transaction_screen
+from screens.notification_screen import get_notification_screen
+from screens.transaction_screen import get_transaction_screen
 from layout import create_iphone_layout
 
 
@@ -76,7 +78,7 @@ def main(page: ft.Page):
             home_screen = get_home_screen(
                 page,
                 on_logout=lambda: page.go("/login"),
-                on_add_transaction=lambda: page.go("/add")
+                on_notification=lambda: page.go("/notifications")
             )
             page.add(ft.Row([create_iphone_layout(home_screen)], alignment=ft.MainAxisAlignment.CENTER))
             
@@ -90,6 +92,20 @@ def main(page: ft.Page):
                 on_save=handle_save
             )
             page.add(ft.Row([create_iphone_layout(add_transaction_screen)], alignment=ft.MainAxisAlignment.CENTER))
+            
+        elif page.route == "/notifications":
+            notification_screen = get_notification_screen(
+                page,
+                on_back=lambda: page.go("/home")
+            )
+            page.add(ft.Row([create_iphone_layout(notification_screen)], alignment=ft.MainAxisAlignment.CENTER))
+            
+        elif page.route == "/transactions":
+            transaction_screen = get_transaction_screen(
+                page,
+                on_back=lambda: page.go("/home")
+            )
+            page.add(ft.Row([create_iphone_layout(transaction_screen)], alignment=ft.MainAxisAlignment.CENTER))
             
         page.update()
 

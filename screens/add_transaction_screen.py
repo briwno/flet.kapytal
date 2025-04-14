@@ -119,7 +119,7 @@ def get_add_transaction_screen(page: ft.Page, on_save: callable) -> ft.Container
                         ft.IconButton(
                             icon=ft.icons.CLOSE,
                             icon_color=SOFT_GOLD,
-                            on_click=lambda _: page.go("/home"),
+                            on_click=lambda _: page.go("/transactions"),
                         ),
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
