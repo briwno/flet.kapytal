@@ -1,6 +1,7 @@
 import flet as ft
 import threading
 from screens.login_screen import get_login_screen
+from screens.profile_screen import get_profile_screen
 from screens.register_screen import get_register_screen
 from screens.home_screen import get_home_screen
 from screens.add_transaction_screen import get_add_transaction_screen
@@ -20,7 +21,12 @@ def main(page: ft.Page):
     page.window_height = 932
     page.bgcolor = ft.colors.BLACK
     page.update()
-
+    
+    def close_dialog(tela):
+        tela.open = False
+        page.update()
+        page.go("/home")
+                
     def route_change(route):
         print(f"Rota mudou para: {route}")
         page.clean()
@@ -82,6 +88,21 @@ def main(page: ft.Page):
             )
             page.add(ft.Row([create_iphone_layout(home_screen)], alignment=ft.MainAxisAlignment.CENTER))
             
+        elif page.route == "/analysis":
+            analysis_screen = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Análise Financeira"),
+                content=ft.Text("Tela de análise financeira em desenvolvimento."),
+                actions=[
+                    ft.TextButton("Fechar", on_click=lambda _: close_dialog(analysis_screen)),
+                    
+                ]
+            )
+            page.dialog = analysis_screen
+            analysis_screen.open = True
+            page.update()
+            page.add(ft.Row([create_iphone_layout(analysis_screen)], alignment=ft.MainAxisAlignment.CENTER))
+            
         elif page.route == "/add":
             def handle_save(transaction_data):
                 print("Transação salva:", transaction_data)
@@ -107,7 +128,14 @@ def main(page: ft.Page):
             )
             page.add(ft.Row([create_iphone_layout(transaction_screen)], alignment=ft.MainAxisAlignment.CENTER))
             
-        page.update()
+        
+        elif page.route == "/profile":
+            profile_screen= get_profile_screen(
+                page,
+                on_back=lambda: page.go("/home"),
+                on_logout=lambda: page.go("/login")
+            )
+            page.add(ft.Row([create_iphone_layout(profile_screen)], alignment=ft.MainAxisAlignment.CENTER))
 
     def view_pop(view):
         page.views.pop()

@@ -9,31 +9,13 @@ def get_navbar(page: ft.Page, active_index: int = 0) -> ft.Container:
         if index == 0:  # Home
             page.go("/home")
         elif index == 1:  # Análise
-            # page.go("/analysis")
-            print("Análise não implementada")
-            ft.AlertDialog(
-                title="Análise",
-                content="Essa funcionalidade ainda não está implementada.",
-                actions=[ft.TextButton("OK", on_click=lambda e: page.dialog.close())],
-            ).show(page)
+            page.go("/analysis")
         elif index == 2:  # Transações
             page.go("/transactions")
         elif index == 3:  # Carteira
-            # page.go("/wallet")
-            print("Carteira não implementada")
-            ft.AlertDialog(
-                title="Carteira",
-                content="Essa funcionalidade ainda não está implementada.",
-                actions=[ft.TextButton("OK", on_click=lambda e: page.dialog.close())],
-            ).show(page)
+            page.go("/wallet")
         elif index == 4:  # Perfil
-            # page.go("/profile")
-            print("Perfil não implementado")
-            ft.AlertDialog(
-                title="Perfil",
-                content="Essa funcionalidade ainda não está implementada.",
-                actions=[ft.TextButton("OK", on_click=lambda e: page.dialog.close())],
-            ).show(page)
+            page.go("/profile")
             
     return ft.Container(
         content=ft.Container(

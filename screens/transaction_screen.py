@@ -82,7 +82,7 @@ def get_transaction_screen(page: ft.Page, on_back: callable) -> ft.Container:
         bgcolor=DARK_BG,
         border_radius=ft.border_radius.all(35),
         padding=ft.padding.only(left=20, right=20),
-        content=ft.Stack(
+        content=ft.Column(  # Alterado de ft.Stack para ft.Column
             [
                 ft.Column(
                     [
@@ -99,7 +99,7 @@ def get_transaction_screen(page: ft.Page, on_back: callable) -> ft.Container:
                                 ft.Text(
                                     "Transações",
                                     size=20,
-                                    weight=ft.FontWeight.BOLD,
+                                    weight=ft.FontWeight.BOLD, 
                                     color=SOFT_GOLD,
                                 ),
                                 ft.IconButton(
@@ -310,4 +310,4 @@ def get_transaction_screen(page: ft.Page, on_back: callable) -> ft.Container:
                 get_navbar(page, active_index=2),
             ],
         ),
-    ) 
+    )
