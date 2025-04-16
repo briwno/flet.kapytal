@@ -435,11 +435,72 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callabl
                                             ),
                                         ],
                                     ),
+                                    margin=ft.margin.only(bottom=15),
+                                ),
+                                ft.Container(
+                                    content=ft.Row(
+                                        [
+                                            ft.Container(
+                                                content=ft.Icon(
+                                                    ft.icons.FITNESS_CENTER,
+                                                    color=SOFT_GOLD,
+                                                    size=22,
+                                                ),
+                                                bgcolor=ICON_BG,
+                                                padding=8,
+                                                border_radius=10,
+                                            ),
+                                            ft.Container(width=15),
+                                            ft.Column(
+                                                [
+                                                    ft.Text(
+                                                        "Academia",
+                                                        size=16,
+                                                        weight=ft.FontWeight.W_500,
+                                                        color=SOFT_GOLD,
+                                                    ),
+                                                    ft.Row(
+                                                        [
+                                                            ft.Text(
+                                                                "7:00 - 10 Abril",
+                                                                size=12,
+                                                                color="#666666",
+                                                            ),
+                                                            ft.Container(width=10),
+                                                            ft.Text(
+                                                                "Saúde",
+                                                                size=12,
+                                                                color="#666666",
+                                                            ),
+                                                        ],
+                                                    ),
+                                                ],
+                                                spacing=2,
+                                            ),
+                                            ft.Container(
+                                                expand=True,
+                                                content=ft.Text(
+                                                    "-R$ 150,00",
+                                                    size=16,
+                                                    weight=ft.FontWeight.W_500,
+                                                    color=SOFT_GOLD,
+                                                    text_align=ft.TextAlign.RIGHT,
+                                                ),
+                                            ),
+                                        ],
+                                    ),
+                                    margin=ft.margin.only(bottom=15),
+                                ),
+                                ft.Container(
+                                    height=200,
                                 ),
                             ],
                         ),
                     ],
                     scroll=ft.ScrollMode.AUTO,
+                    expand=True,
+                    alignment=ft.MainAxisAlignment.START,
+                 
                 ),
                 
                 # Using the new navbar component

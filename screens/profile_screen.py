@@ -21,14 +21,14 @@ def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable) ->
         bgcolor=DARK_BG,
         border_radius=ft.border_radius.all(35),
         content=ft.Stack(
-            [
+            controls=[
                 ft.Column(
-                    [
+                    controls=[
                         # Cabeçalho
                         ft.Container(
-                            padding=ft.padding.symmetric(horizontal=16, vertical=30),  # Adiciona espaçamento interno
+                            padding=ft.padding.symmetric(horizontal=16, vertical=30),
                             content=ft.Row(
-                                [
+                                controls=[
                                     ft.IconButton(
                                         icon=ft.icons.ARROW_BACK,
                                         icon_color=SOFT_GOLD,
@@ -48,188 +48,93 @@ def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable) ->
                                         icon_size=20,
                                     ),
                                 ],
-                                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,  # Garante espaçamento entre os itens
-                                vertical_alignment=ft.CrossAxisAlignment.CENTER,  # Centraliza verticalmente os itens
+                                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                                vertical_alignment=ft.CrossAxisAlignment.CENTER,
                             ),
                         ),
-                        
-                        ft.Container(height=10),
 
-                        # Foto e informações do usuário
-                        ft.Column(
-                            [
-                                ft.CircleAvatar(
-                                    radius=40,
-                                    bgcolor=ICON_BG,
-                                    content=ft.Icon(
-                                        ft.icons.PERSON,
+                        # Imagem de perfil e nome
+                        ft.Container(
+                            alignment=ft.alignment.center,
+                            padding=ft.padding.only(top=10, bottom=20),
+                            content=ft.Column(
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                spacing=10,
+                                controls=[
+                                    ft.CircleAvatar(
+                                        radius=40,
+                                        bgcolor=ICON_BG,
+                                        content=ft.Icon(
+                                            ft.icons.PERSON,
+                                            color=SOFT_GOLD,
+                                            size=40,
+                                        ),
+                                    ),
+                                    ft.Text(
+                                        "Bruno Mito",
+                                        size=18,
+                                        weight=ft.FontWeight.BOLD,
                                         color=SOFT_GOLD,
-                                        size=40,
                                     ),
-                                ),
-                                ft.Text(
-                                    "Bruno Mito",
-                                    size=18,
-                                    weight=ft.FontWeight.BOLD,
-                                    color=SOFT_GOLD,
-                                ),
-                                ft.Text(
-                                    "ID: 1",
-                                    size=12,
-                                    color="#666666",
-                                ),
-                            ],
-                            alignment=ft.MainAxisAlignment.CENTER,
+                                    ft.Text(
+                                        "ID: 1",
+                                        size=12,
+                                        color="#666666",
+                                    ),
+                                ],
+                            ),
                         ),
-                        ft.Container(height=20),
 
-                        # Opções do perfil
+                        # Lista de opções
                         ft.Column(
-                            [
-                                ft.Container(
-                                    content=ft.Row(
-                                        [
-                                            ft.Container(
-                                                content=ft.IconButton(
-                                                    icon=ft.icons.EDIT,
-                                                    icon_color=SOFT_GOLD,
-                                                    icon_size=24,
-                                                ),
-                                                bgcolor=ICON_BG,
-                                                padding=8,
-                                                border_radius=12,
-                                            ),
-                                            ft.Text(
-                                                "Editar Perfil",
-                                                size=16,
-                                                color=SOFT_GOLD,
-                                                weight=ft.FontWeight.W_500,
-                                            ),
-                                        ],
-                                        spacing=10,
-                                    ),
-                                    bgcolor=CARD_BG,
-                                    padding=12,
-                                    border_radius=12,
-                                    margin=ft.margin.symmetric(vertical=4),
-                                ),
-                                ft.Container(
-                                    content=ft.Row(
-                                        [
-                                            ft.Container(
-                                                content=ft.IconButton(
-                                                    icon=ft.icons.SECURITY,
-                                                    icon_color=SOFT_GOLD,
-                                                    icon_size=24,
-                                                ),
-                                                bgcolor=ICON_BG,
-                                                padding=8,
-                                                border_radius=12,
-                                            ),
-                                            ft.Text(
-                                                "Segurança",
-                                                size=16,
-                                                color=SOFT_GOLD,
-                                                weight=ft.FontWeight.W_500,
-                                            ),
-                                        ],
-                                        spacing=10,
-                                    ),
-                                    bgcolor=CARD_BG,
-                                    padding=12,
-                                    border_radius=12,
-                                    margin=ft.margin.symmetric(vertical=4),
-                                ),
-                                ft.Container(
-                                    content=ft.Row(
-                                        [
-                                            ft.Container(
-                                                content=ft.IconButton(
-                                                    icon=ft.icons.SETTINGS,
-                                                    icon_color=SOFT_GOLD,
-                                                    icon_size=24,
-                                                ),
-                                                bgcolor=ICON_BG,
-                                                padding=8,
-                                                border_radius=12,
-                                            ),
-                                            ft.Text(
-                                                "Configurações",
-                                                size=16,
-                                                color=SOFT_GOLD,
-                                                weight=ft.FontWeight.W_500,
-                                            ),
-                                        ],
-                                        spacing=10,
-                                    ),
-                                    bgcolor=CARD_BG,
-                                    padding=12,
-                                    border_radius=12,
-                                    margin=ft.margin.symmetric(vertical=4),
-                                ),
-                                ft.Container(
-                                    content=ft.Row(
-                                        [
-                                            ft.Container(
-                                                content=ft.IconButton(
-                                                    icon=ft.icons.HELP,
-                                                    icon_color=SOFT_GOLD,
-                                                    icon_size=24,
-                                                ),
-                                                bgcolor=ICON_BG,
-                                                padding=8,
-                                                border_radius=12,
-                                            ),
-                                            ft.Text(
-                                                "Ajuda",
-                                                size=16,
-                                                color=SOFT_GOLD,
-                                                weight=ft.FontWeight.W_500,
-                                            ),
-                                        ],
-                                        spacing=10,
-                                    ),
-                                    bgcolor=CARD_BG,
-                                    padding=12,
-                                    border_radius=12,
-                                    margin=ft.margin.symmetric(vertical=4),
-                                ),
-                                ft.Container(
-                                    content=ft.Row(
-                                        [
-                                            ft.Container(
-                                                content=ft.IconButton(
-                                                    icon=ft.icons.LOGOUT,
-                                                    icon_color=SOFT_GOLD,
-                                                    icon_size=24,
-                                                ),
-                                                bgcolor=ICON_BG,
-                                                padding=8,
-                                                border_radius=12,
-                                            ),
-                                            ft.Text(
-                                                "Sair",
-                                                size=16,
-                                                color=SOFT_GOLD,
-                                                weight=ft.FontWeight.W_500,
-                                            ),
-                                        ],
-                                        spacing=10,
-                                    ),
-                                    bgcolor=CARD_BG,
-                                    padding=12,
-                                    border_radius=12,
-                                    margin=ft.margin.symmetric(vertical=4),
-                                ),
+                            controls=[
+                                profile_option(ft.icons.EDIT, "Editar Perfil", SOFT_GOLD, ICON_BG),
+                                profile_option(ft.icons.SECURITY, "Segurança", SOFT_GOLD, ICON_BG),
+                                profile_option(ft.icons.SETTINGS, "Configurações", SOFT_GOLD, ICON_BG),
+                                profile_option(ft.icons.HELP, "Ajuda", SOFT_GOLD, ICON_BG),
+                                profile_option(ft.icons.LOGOUT, "Sair", SOFT_GOLD, ICON_BG, on_click=handle_logout),
                             ],
                             spacing=8,
+                            alignment=ft.MainAxisAlignment.CENTER,
                         ),
+
+                        ft.Container(height=80),  # Espaço para a navbar
                     ],
+                    alignment=ft.MainAxisAlignment.START,
+                    spacing=0,
                 ),
+                # Navbar fixa
                 get_navbar(page, active_index=4),
-            ],
+            ]
         ),
     )
 
-
-
+# Função auxiliar para criar opções de perfil
+def profile_option(icon, text, color, bgcolor, on_click=None):
+    return ft.Container(
+        content=ft.Row(
+            controls=[
+                ft.Container(
+                    content=ft.IconButton(
+                        icon=icon,
+                        icon_color=color,
+                        icon_size=24,
+                        on_click=on_click
+                    ),
+                    bgcolor=bgcolor,
+                    padding=8,
+                    border_radius=12,
+                ),
+                ft.Text(
+                    text,
+                    size=16,
+                    color=color,
+                    weight=ft.FontWeight.W_500,
+                ),
+            ],
+            spacing=10,
+        ),
+        padding=12,
+        border_radius=12,
+        margin=ft.margin.symmetric(vertical=4, horizontal=20),
+    )
