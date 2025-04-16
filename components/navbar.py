@@ -69,6 +69,6 @@ def get_navbar(page: ft.Page, active_index: int = 0) -> ft.Container:
             border_radius=30,
             width=280,
         ),
-        margin=ft.margin.only(top=700),
-        alignment=ft.alignment.center,
+        margin=ft.margin.only(top=0, bottom=30),
+        alignment=ft.alignment.bottom_center,
     ) 
