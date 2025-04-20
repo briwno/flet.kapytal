@@ -1,6 +1,7 @@
 import flet as ft
 import threading
 from screens.login_screen import get_login_screen
+from screens.news_screen import get_news_screen
 from screens.profile_screen import get_profile_screen
 from screens.register_screen import get_register_screen
 from screens.home_screen import get_home_screen
@@ -128,6 +129,12 @@ def main(page: ft.Page):
             )
             page.add(ft.Row([create_iphone_layout(transaction_screen)], alignment=ft.MainAxisAlignment.CENTER))
             
+        elif page.route == "/news":
+            news_screen = get_news_screen(
+                page,
+                on_notification=lambda: page.go("/notifications")
+            )
+            page.add(ft.Row([create_iphone_layout(news_screen)], alignment=ft.MainAxisAlignment.CENTER))
         
         elif page.route == "/profile":
             profile_screen= get_profile_screen(

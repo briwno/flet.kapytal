@@ -12,8 +12,8 @@ def get_navbar(page: ft.Page, active_index: int = 0) -> ft.Container:
             page.go("/analysis")
         elif index == 2:  # Transações
             page.go("/transactions")
-        elif index == 3:  # Carteira
-            page.go("/wallet")
+        elif index == 3:  # Noticias
+            page.go("/news")
         elif index == 4:  # Perfil
             page.go("/profile")
             
@@ -48,7 +48,7 @@ def get_navbar(page: ft.Page, active_index: int = 0) -> ft.Container:
                         border=ft.border.all(2, DARK_BG) if active_index == 2 else None,
                     ),
                     ft.IconButton(
-                        icon=ft.icons.ACCOUNT_BALANCE_WALLET,
+                        icon=ft.icons.NEWSPAPER,
                         icon_color=DARK_BG,
                         icon_size=22,
                         opacity=1.0 if active_index == 3 else 0.5,
