@@ -1,5 +1,6 @@
 import flet as ft
 import threading
+from screens.analysis_screen import get_analysis_screen
 from screens.login_screen import get_login_screen
 from screens.news_screen import get_news_screen
 from screens.profile_screen import get_profile_screen
@@ -90,18 +91,10 @@ def main(page: ft.Page):
             page.add(ft.Row([create_iphone_layout(home_screen)], alignment=ft.MainAxisAlignment.CENTER))
             
         elif page.route == "/analysis":
-            analysis_screen = ft.AlertDialog(
-                modal=True,
-                title=ft.Text("Análise Financeira"),
-                content=ft.Text("Tela de análise financeira em desenvolvimento."),
-                actions=[
-                    ft.TextButton("Fechar", on_click=lambda _: close_dialog(analysis_screen)),
-                    
-                ]
+            analysis_screen = get_analysis_screen(
+                page,
+                on_notification=lambda: page.go("/notifications")
             )
-            page.dialog = analysis_screen
-            analysis_screen.open = True
-            page.update()
             page.add(ft.Row([create_iphone_layout(analysis_screen)], alignment=ft.MainAxisAlignment.CENTER))
             
         elif page.route == "/add":
