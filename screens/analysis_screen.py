@@ -10,12 +10,13 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
     ICON_BG = "#262626"
     TEXT_COLOR = "#FFFFFF"
     BLUE = "#3E83FF"
+    GREEN = "#00FF00"
 
     def handle_notification(e):
         on_notification()
 
     return ft.Container(
-         width=400,
+        width=400,
         height=830,
         bgcolor=DARK_BG,
         border_radius=ft.border_radius.all(35),
@@ -28,34 +29,22 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                         # Cabeçalho
                         ft.Row(
                             [
-                                ft.Column(
-                                    [
-                                        ft.Text(
-                                            "Olá, Bem-vindo de volta",
-                                            
-                                            size=20,
-                                            weight=ft.FontWeight.BOLD,
-                                            color=SOFT_GOLD,
-                                        ),
-                                        ft.Text(
-                                            "Bom dia",
-                                            size=14,
-                                            color=SOFT_GOLD,
-                                            opacity=0.8,
-                                        ),
-                                    ],
-                                    spacing=2,
+                                ft.IconButton(
+                                    icon=ft.icons.ARROW_BACK,
+                                    icon_color=SOFT_GOLD,
+                                    icon_size=22,
                                 ),
-                                ft.Row(
-                                    [
-                                        ft.IconButton(
-                                            icon=ft.icons.NOTIFICATIONS_NONE,
-                                            icon_color=SOFT_GOLD,
-                                            icon_size=22,
-                                            on_click=handle_notification,
-                                        ),
-                                    ],
-                                    spacing=5,
+                                ft.Text(
+                                    "Análise",
+                                    size=20,
+                                    weight=ft.FontWeight.BOLD,
+                                    color=SOFT_GOLD,
+                                ),
+                                ft.IconButton(
+                                    icon=ft.icons.NOTIFICATIONS_NONE,
+                                    icon_color=SOFT_GOLD,
+                                    icon_size=22,
+                                    on_click=handle_notification,
                                 ),
                             ],
                             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -108,12 +97,17 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                         border_radius=4,
                                     ),
                                     ft.Container(height=5),
-                                    ft.Text("R$ 20.000,00", color=SOFT_GOLD, size=12, opacity=0.8),
-                                    ft.Text(
-                                        "30% Das Suas Despesas, Muito Bom!",
-                                        color=SOFT_GOLD,
-                                        size=14,
-                                        weight=ft.FontWeight.W_500,
+                                    ft.Row(
+                                        [
+                                            ft.Text("R$ 20.000,00", color=SOFT_GOLD, size=12, opacity=0.8),
+                                            ft.Text(
+                                                "30% das suas despesas, muito bom!",
+                                                color=SOFT_GOLD,
+                                                size=14,
+                                                weight=ft.FontWeight.W_500,
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                                     ),
                                 ],
                                 spacing=4,
@@ -122,69 +116,229 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                         
                         ft.Container(height=20),
                         
-                        ft.Row(
-                            [
-                                ft.TextButton(
-                                    "Diario",
-                                    style=ft.ButtonStyle(
-                                        color="#666666",
+                        # Botões de Filtro
+                        ft.Container(
+                            bgcolor=CARD_BG,
+                            border_radius=ft.border_radius.all(12),
+                            padding=ft.padding.all(10),
+                            content=ft.Row(
+                                [
+                                    ft.TextButton(
+                                        "Diário",
+                                        style=ft.ButtonStyle(
+                                            color=TEXT_COLOR,
+                                            bgcolor=SOFT_GOLD,
+                                            shape=ft.RoundedRectangleBorder(radius=8),
+                                        ),
                                     ),
-                                ),
-                                ft.TextButton(
-                                    "Semanal",
-                                    style=ft.ButtonStyle(
-                                        color="#666666",
+                                    ft.TextButton(
+                                        "Semanal",
+                                        style=ft.ButtonStyle(
+                                            color="#666666",
+                                            shape=ft.RoundedRectangleBorder(radius=8),
+                                        ),
                                     ),
-                                ),
-                                ft.TextButton(
-                                    "Mensal",
-                                    style=ft.ButtonStyle(
-                                        color="#666666",
+                                    ft.TextButton(
+                                        "Mensal",
+                                        style=ft.ButtonStyle(
+                                            color="#666666",
+                                            shape=ft.RoundedRectangleBorder(radius=8),
+                                        ),
                                     ),
-                                ),
-                                ft.TextButton(
-                                    "Anual",
-                                    style=ft.ButtonStyle(
-                                        color="#666666",
-                                        
+                                    ft.TextButton(
+                                        "Anual",
+                                        style=ft.ButtonStyle(
+                                            color="#666666",
+                                            shape=ft.RoundedRectangleBorder(radius=8),
+                                        ),
                                     ),
-                                ),
-                            ],
-                            alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                                ],
+                                alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                            ),
                         ),
+                        
                         ft.Container(height=15),
                         
                         # Gráfico de Barras
-                        ft.BarChart(
-                            bar_groups=[
-                                ft.BarChartGroup(
-                                    x=0,
-                                    bar_rods=[
-                                        ft.BarChartRod(
-                                            from_y=0,
-                                            to_y=2000,  # Substituir 'y' por 'to_y'
-                                            width=40,
-                                            color=SOFT_GOLD,
-                                            tooltip="Janeiro",
-                                        ),
-                                    ],
-                                ),
-                                ft.BarChartGroup(
-                                    x=1,
-                                    bar_rods=[
-                                        ft.BarChartRod(
-                                            from_y=0,
-                                            to_y=3000,  # Substituir 'y' por 'to_y'
-                                            width=40,
-                                            color=SOFT_GOLD,
-                                            tooltip="Fevereiro",
-                                        ),
-                                    ],
-                                ),
-                            ],
-                            max_y=3500,
-                            height=200,
-                            width=350,
+                        ft.Container(
+                            bgcolor=CARD_BG,
+                            border_radius=ft.border_radius.all(12),
+                            padding=ft.padding.all(15),
+                            content=ft.Column(
+                                [
+                                    ft.Row(
+                                        [
+                                            ft.Text(
+                                                "Receitas e Despesas",
+                                                size=16,
+                                                weight=ft.FontWeight.BOLD,
+                                                color=SOFT_GOLD,
+                                            ),
+                                            ft.IconButton(
+                                                icon=ft.icons.SEARCH,
+                                                icon_color=SOFT_GOLD,
+                                                icon_size=20,
+                                            ),
+                                            ft.IconButton(
+                                                icon=ft.icons.CALENDAR_TODAY,
+                                                icon_color=SOFT_GOLD,
+                                                icon_size=20,
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                                    ),
+                                    ft.BarChart(
+                                        bar_groups=[
+                                            ft.BarChartGroup(
+                                                x=0,
+                                                bar_rods=[
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=4000,
+                                                        width=20,
+                                                        color=GREEN,
+                                                        tooltip="Receitas - Segunda",
+                                                    ),
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=2000,
+                                                        width=20,
+                                                        color=BLUE,
+                                                        tooltip="Despesas - Segunda",
+                                                    ),
+                                                ],
+                                            ),
+                                            ft.BarChartGroup(
+                                                x=1,
+                                                bar_rods=[
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=3000,
+                                                        width=20,
+                                                        color=GREEN,
+                                                        tooltip="Receitas - Terça",
+                                                    ),
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=1500,
+                                                        width=20,
+                                                        color=BLUE,
+                                                        tooltip="Despesas - Terça",
+                                                    ),
+                                                ],
+                                            ),
+                                            ft.BarChartGroup(
+                                                x=2,
+                                                bar_rods=[
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=5000,
+                                                        width=20,
+                                                        color=GREEN,
+                                                        tooltip="Receitas - Quarta",
+                                                    ),
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=2500,
+                                                        width=20,
+                                                        color=BLUE,
+                                                        tooltip="Despesas - Quarta",
+                                                    ),
+                                                ],
+                                            ),
+                                            ft.BarChartGroup(
+                                                x=3,
+                                                bar_rods=[
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=4500,
+                                                        width=20,
+                                                        color=GREEN,
+                                                        tooltip="Receitas - Quinta",
+                                                    ),
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=3000,
+                                                        width=20,
+                                                        color=BLUE,
+                                                        tooltip="Despesas - Quinta",
+                                                    ),
+                                                ],
+                                            ),
+                                            ft.BarChartGroup(
+                                                x=4,
+                                                bar_rods=[
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=6000,
+                                                        width=20,
+                                                        color=GREEN,
+                                                        tooltip="Receitas - Sexta",
+                                                    ),
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=3500,
+                                                        width=20,
+                                                        color=BLUE,
+                                                        tooltip="Despesas - Sexta",
+                                                    ),
+                                                ],
+                                            ),
+                                            ft.BarChartGroup(
+                                                x=5,
+                                                bar_rods=[
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=2000,
+                                                        width=20,
+                                                        color=GREEN,
+                                                        tooltip="Receitas - Sábado",
+                                                    ),
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=1000,
+                                                        width=20,
+                                                        color=BLUE,
+                                                        tooltip="Despesas - Sábado",
+                                                    ),
+                                                ],
+                                            ),
+                                            ft.BarChartGroup(
+                                                x=6,
+                                                bar_rods=[
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=3000,
+                                                        width=20,
+                                                        color=GREEN,
+                                                        tooltip="Receitas - Domingo",
+                                                    ),
+                                                    ft.BarChartRod(
+                                                        from_y=0,
+                                                        to_y=1500,
+                                                        width=20,
+                                                        color=BLUE,
+                                                        tooltip="Despesas - Domingo",
+                                                    ),
+                                                ],
+                                            ),
+                                        ],
+                                        max_y=7000,
+                                        height=200,
+                                        width=350,
+                                    ),
+                                ],
+                            ),
+                        ),
+                        
+                        ft.Container(height=20),
+                        
+                        # Metas
+                        ft.Text(
+                            "Minhas Metas",
+                            size=16,
+                            weight=ft.FontWeight.BOLD,
+                            color=SOFT_GOLD,
                         ),
                     ],
                 ),

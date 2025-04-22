@@ -10,6 +10,7 @@ from screens.add_transaction_screen import get_add_transaction_screen
 from screens.notification_screen import get_notification_screen
 from screens.transaction_screen import get_transaction_screen
 from layout import create_iphone_layout
+from storage.data.user_data import register_user, authenticate_user
 
 
 def main(page: ft.Page):
@@ -63,10 +64,14 @@ def main(page: ft.Page):
             threading.Timer(1, lambda: page.go("/login")).start()
             
         elif page.route == "/login":
-            def handle_login():
-                print("Função handle_login chamada")
-                page.go("/home")
-                
+            def handle_login(email, password):
+                success, result = authenticate_user(email, password)
+                if success:
+                    print(f"Bem-vindo, {result}!")
+                    page.go("/home")
+                else:
+                    print(result)  # Exibe mensagem de erro
+
             login_screen = get_login_screen(
                 page,
                 on_login=handle_login,
@@ -75,9 +80,20 @@ def main(page: ft.Page):
             page.add(ft.Row([create_iphone_layout(login_screen)], alignment=ft.MainAxisAlignment.CENTER))
             
         elif page.route == "/register":
+            def handle_register(name, email, password, confirm_password):
+                if password == confirm_password:
+                    success, message = register_user(name, email, password)
+                    if success:
+                        print(message)
+                        page.go("/login")
+                    else:
+                        print(message)
+                else:
+                    print("As senhas não coincidem")
+
             register_screen = get_register_screen(
                 page,
-                on_register=lambda: print("Registrar clicado!"),
+                on_register=handle_register,
                 switch_to_login=lambda: page.go("/login")
             )
             page.add(ft.Row([create_iphone_layout(register_screen)], alignment=ft.MainAxisAlignment.CENTER))

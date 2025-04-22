@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./storage",
+        "./storage/data"
+    ]
+}

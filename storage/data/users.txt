@@ -1,0 +1,23 @@
+{
+    "user1@example.com": {
+        "name": "Usuário 1",
+        "email": "user1@example.com",
+        "password": "senha123"
+    },
+    "user2@example.com": {
+        "name": "Usuário 2",
+        "email": "user2@example.com",
+        "password": "senha456"
+    },
+    "user3@example.com": {
+        "name": "Usuário 3",
+        "email": "user3@example.com",
+        "password": "senha789"
+    },
+    "123":{
+        "name": "Usuário Simples",
+        "email": "123",
+        "password": "123"
+    }
+
+}

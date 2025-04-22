@@ -28,7 +28,7 @@ def get_login_screen(page: ft.Page, on_login: callable, switch_to_register: call
         print(f"Senha: {password_field.value}")
         if email_field.value and password_field.value:
             print("Campos preenchidos, chamando on_login")
-            on_login()
+            on_login(email_field.value, password_field.value)  # Passa os valores para on_login
         else:
             print("Campos não preenchidos")
     
@@ -82,7 +82,7 @@ def get_login_screen(page: ft.Page, on_login: callable, switch_to_register: call
                     content=ft.Column(
                         [
                             ft.Text(
-                                "Usuário ou Email",
+                                "Email",
                                 size=14,
                                 color=ft.colors.WHITE,
                             ),
