@@ -40,7 +40,13 @@ def get_register_screen(page: ft.Page, on_register: callable, switch_to_login: c
     def handle_register(e):
         if all([name_field.value, email_field.value, password_field.value, confirm_password_field.value]):
             if password_field.value == confirm_password_field.value:
-                on_register()
+                # Chama a função de registro com os valores dos campos
+                on_register(
+                    name_field.value,
+                    email_field.value,
+                    password_field.value,
+                    confirm_password_field.value
+                )
             else:
                 print("As senhas não coincidem")
     

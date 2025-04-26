@@ -3,6 +3,19 @@ import json
 
 # Caminho do arquivo para armazenar os dados dos usuários
 USER_DATA_FILE = os.path.join(os.path.dirname(__file__), "users.txt")
+TRANSACTIONS_FILE = os.path.join(os.path.dirname(__file__), "transactions.txt")
+
+def load_transactions():
+    if os.path.exists(TRANSACTIONS_FILE):
+        with open(TRANSACTIONS_FILE, "r", encoding="utf-8") as file:
+            return json.load(file)
+    return []
+    
+def save_transactions(transactions):
+    transactions = load_transactions()
+    transactions.append(transactions)
+    with open(TRANSACTIONS_FILE, "w", encoding="utf-8") as file:
+        json.dump(transactions, file, indent=4)
 
 # Função para carregar os usuários do arquivo
 def load_users():
