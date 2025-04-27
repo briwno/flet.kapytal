@@ -10,7 +10,7 @@ from screens.add_transaction_screen import get_add_transaction_screen
 from screens.notification_screen import get_notification_screen
 from screens.transaction_screen import get_transaction_screen
 from layout import create_iphone_layout
-from storage.data.user_data import register_user, authenticate_user
+from storage.data.user_data import register_user, authenticate_user, save_transactions
 
 
 def main(page: ft.Page):
@@ -115,9 +115,10 @@ def main(page: ft.Page):
             
         elif page.route == "/add":
             def handle_save(transaction_data):
+                save_transactions(transaction_data)  # Salva a transação no arquivo
                 print("Transação salva:", transaction_data)
-                page.go("/home")
-                
+                page.go("/transactions")  # Redireciona para a tela de transações
+
             add_transaction_screen = get_add_transaction_screen(
                 page,
                 on_save=handle_save

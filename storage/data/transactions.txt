@@ -1,0 +1,37 @@
+[
+    {
+        "type": "receita",
+        "description": "Sal\u00e1rio",
+        "date": "01/05/2025",
+        "category": "Mensal",
+        "value": 4000.0
+    },
+    {
+        "type": "despesa",
+        "description": "MERCADINHO",
+        "date": "02/05/2025",
+        "category": "Alimenta\u00e7\u00e3o",
+        "value": 200.0
+    },
+    {
+        "type": "receita",
+        "value": 100.0,
+        "category": "outros",
+        "description": "beck bolado",
+        "date": "26/04/2025"
+    },
+    {
+        "type": "receita",
+        "value": 1000.0,
+        "category": "outros",
+        "description": "tigrinho",
+        "date": "26/04/2025"
+    },
+    {
+        "type": "despesa",
+        "value": 1000.0,
+        "category": "alimentacao",
+        "description": "beckzao",
+        "date": "26/04/2025"
+    }
+]

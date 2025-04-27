@@ -11,9 +11,12 @@ def load_transactions():
             return json.load(file)
     return []
     
-def save_transactions(transactions):
+def save_transactions(transaction):
+    """
+    Salva uma nova transação no arquivo.
+    """
     transactions = load_transactions()
-    transactions.append(transactions)
+    transactions.append(transaction)  # Adiciona a nova transação
     with open(TRANSACTIONS_FILE, "w", encoding="utf-8") as file:
         json.dump(transactions, file, indent=4)
 

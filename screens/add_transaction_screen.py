@@ -89,13 +89,20 @@ def get_add_transaction_screen(page: ft.Page, on_save: callable) -> ft.Container
     
     def save_transaction(e):
         if all([transaction_type.value, value_field.value, category_field.value, description_field.value]):
-            on_save({
-                "type": transaction_type.value,
-                "value": float(value_field.value.replace("R$ ", "").replace(",", ".")),
-                "category": category_field.value,
-                "description": description_field.value,
-                "date": date_picker.value.strftime("%d/%m/%Y") if date_picker.value else datetime.now().strftime("%d/%m/%Y")
-            })
+            try:
+                transaction_data = {
+                    "type": transaction_type.value,
+                    "value": float(value_field.value.replace("R$ ", "").replace(",", ".")),
+                    "category": category_field.value,
+                    "description": description_field.value,
+                    "date": date_picker.value.strftime("%d/%m/%Y") if date_picker.value else datetime.now().strftime("%d/%m/%Y")
+                }
+                on_save(transaction_data)  # Chama a função de salvar
+                page.go("/transactions")  # Redireciona para a tela de transações
+            except ValueError:
+                print("Erro: Valor inválido.")
+        else:
+            print("Erro: Preencha todos os campos.")
     
     return ft.Container(
         width=400,
@@ -159,4 +166,4 @@ def get_add_transaction_screen(page: ft.Page, on_save: callable) -> ft.Container
             ],
             scroll=ft.ScrollMode.AUTO,
         ),
-    ) 
+    )
