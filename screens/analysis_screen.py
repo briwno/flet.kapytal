@@ -11,7 +11,8 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
     TEXT_COLOR = "#FFFFFF"
     BLUE = "#3E83FF"
     GREEN = "#00FF00"
-
+    RED = "#FF3E3E"
+    
     def handle_notification(e):
         on_notification()
 
@@ -74,7 +75,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                             "- R$ 1.187,40",
                                             size=26,
                                             weight=ft.FontWeight.BOLD,
-                                            color=BLUE,
+                                            color=RED,
                                         ),
                                     ],
                                     spacing=4,
@@ -203,7 +204,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                                         from_y=0,
                                                         to_y=2000,
                                                         width=20,
-                                                        color=BLUE,
+                                                        color=RED,
                                                         tooltip="Despesas - Segunda",
                                                     ),
                                                 ],
@@ -222,7 +223,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                                         from_y=0,
                                                         to_y=1500,
                                                         width=20,
-                                                        color=BLUE,
+                                                        color=RED,
                                                         tooltip="Despesas - Terça",
                                                     ),
                                                 ],
@@ -241,7 +242,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                                         from_y=0,
                                                         to_y=2500,
                                                         width=20,
-                                                        color=BLUE,
+                                                        color=RED,
                                                         tooltip="Despesas - Quarta",
                                                     ),
                                                 ],
@@ -260,7 +261,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                                         from_y=0,
                                                         to_y=3000,
                                                         width=20,
-                                                        color=BLUE,
+                                                        color=RED,
                                                         tooltip="Despesas - Quinta",
                                                     ),
                                                 ],
@@ -279,7 +280,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                                         from_y=0,
                                                         to_y=3500,
                                                         width=20,
-                                                        color=BLUE,
+                                                        color=RED,
                                                         tooltip="Despesas - Sexta",
                                                     ),
                                                 ],
@@ -298,7 +299,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                                         from_y=0,
                                                         to_y=1000,
                                                         width=20,
-                                                        color=BLUE,
+                                                        color=RED,
                                                         tooltip="Despesas - Sábado",
                                                     ),
                                                 ],
@@ -317,7 +318,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                                         from_y=0,
                                                         to_y=1500,
                                                         width=20,
-                                                        color=BLUE,
+                                                        color=RED,
                                                         tooltip="Despesas - Domingo",
                                                     ),
                                                 ],

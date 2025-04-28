@@ -10,6 +10,7 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callabl
     CARD_BG = "#1A1A1A"
     ICON_BG = "#262626"
     BLUE = "#3E83FF"
+    RED = "#FF3E3E"
 
     def handle_logout(e):
         on_logout()
@@ -88,7 +89,7 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callabl
                                             "- R$ 1.187,40",
                                             size=26,
                                             weight=ft.FontWeight.BOLD,
-                                            color=BLUE,
+                                            color=RED,
                                         ),
                                     ],
                                     spacing=4,

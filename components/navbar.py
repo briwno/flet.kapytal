@@ -35,17 +35,12 @@ def get_navbar(page: ft.Page, active_index: int = 0) -> ft.Container:
                         opacity=1.0 if active_index == 1 else 0.5,
                         on_click=lambda e: handle_nav(e, 1),
                     ),
-                    ft.Container(
-                        content=ft.IconButton(
-                            icon=ft.icons.SWAP_HORIZ,
-                            icon_color=DARK_BG,
-                            icon_size=22,
-                            opacity=1.0 if active_index == 2 else 0.5,
-                            on_click=lambda e: handle_nav(e, 2),
-                        ),
-                        bgcolor=SOFT_GOLD,
-                        shape=ft.BoxShape.CIRCLE,
-                        border=ft.border.all(2, DARK_BG) if active_index == 2 else None,
+                    ft.IconButton(
+                        icon=ft.icons.SWAP_HORIZ,
+                        icon_color=DARK_BG,
+                        icon_size=22,
+                        opacity=1.0 if active_index == 2 else 0.5,
+                        on_click=lambda e: handle_nav(e, 2),
                     ),
                     ft.IconButton(
                         icon=ft.icons.NEWSPAPER,
