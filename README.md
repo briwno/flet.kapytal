@@ -25,6 +25,14 @@ O **Kapytal** é um aplicativo de gestão financeira que busca ajudar pessoas e 
 - [Flet](https://flet.dev/) (UI)
 - [MySQL](https://www.mysql.com/) *(planejado para o backend)*
 - Figma *(para o protótipo de interface)*
+## 🌐 API Utilizada
+
+O projeto utiliza a API da [Financial Modeling Prep](https://financialmodelingprep.com/) para obter dados financeiros em tempo real.  
+
+### Endpoint Integrado
+
+- **Endpoint:** `https://financialmodelingprep.com/stable/quote?symbol=BTCUSD&apikey=api_key`  
+- **Descrição:** Retorna informações atualizadas sobre o preço do Bitcoin (BTC) em relação ao dólar americano (USD).  
 
 ## 🛠 Como Rodar o Projeto
 
