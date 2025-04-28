@@ -1,5 +1,9 @@
 import flet as ft
 from components.navbar import get_navbar
+from api.api_code import get_brazil_news, get_currency_rates
+from datetime import date, timedelta
+import re
+from html import unescape  # Para decodificar entidades HTML
 
 def get_news_screen(page: ft.Page, on_notification: callable) -> ft.Container:
     # Definindo cores personalizadas
@@ -13,13 +17,20 @@ def get_news_screen(page: ft.Page, on_notification: callable) -> ft.Container:
     def handle_notification(e):
         on_notification()
 
-    def create_news_card(title, description, date):
+    def create_news_card(title, description, date, link=None):
+        
         return ft.Container(
             content=ft.Column(
                 [
                     ft.Text(title, size=16, weight=ft.FontWeight.BOLD, color=SOFT_GOLD),
                     ft.Text(description, size=14, color=TEXT_COLOR, opacity=0.8),
                     ft.Text(date, size=12, color="#666666"),
+                    ft.TextButton(
+                        "Leia mais",
+                        on_click=lambda e: page.launch_url(link) if link else None,
+                        icon=ft.icons.LINK,
+                        visible=link is not None,
+                    ),
                 ],
                 spacing=5,
             ),
@@ -29,22 +40,23 @@ def get_news_screen(page: ft.Page, on_notification: callable) -> ft.Container:
             margin=ft.margin.only(bottom=10),
         )
 
-    # Conteúdo das abas
-    general_news = ft.Column(
-        [
-            create_news_card(
-                "Meu pau cresceu 2 cm",
-                "rola aumentou",
-                "20 de Abril, 2025",
-            ),
-            create_news_card(
-                "cucucuucuc",
-                "rolas",
-                "20 de Abril, 2025",
-            ),
-        ],
-        scroll=ft.ScrollMode.AUTO,
-    )
+    # Obter as notícias econômicas do Brasil
+    # news_data = get_brazil_news()  # Alterado para usar get_brazil_news
+    # print("Notícias econômicas do Brasil:", news_data)
+
+    # # Criando os cards de notícias
+    # general_news = ft.Column(
+    #     [
+    #         create_news_card(
+    #             title=item.get('title', 'Título não disponível'),
+    #             description=item.get('description', 'Conteúdo não disponível'),
+    #             date=item.get('publishedAt', 'Data não disponível'),
+    #             link=item.get('url', '#'),
+    #         )
+    #         for item in news_data
+    #     ],
+    #     scroll=ft.ScrollMode.AUTO,
+    # )
 
     stock_news = ft.Column(
         [
@@ -61,22 +73,44 @@ def get_news_screen(page: ft.Page, on_notification: callable) -> ft.Container:
         ],
         scroll=ft.ScrollMode.AUTO,
     )
+    
+    # Obtendo as cotações de moedas    
+    currency_data = get_currency_rates()
 
-    currency_news = ft.Column(
-        [
-            create_news_card(
-                "Dólar em Queda",
-                "O dólar caiu 1,5% em relação ao real, fechando a R$ 4,80.",
-                "20 de Abril, 2025",
-            ),
-            create_news_card(
-                "Euro Estável",
-                "O euro manteve-se estável em relação ao real, cotado a R$ 5,20.",
-                "20 de Abril, 2025",
-            ),
-        ],
-        scroll=ft.ScrollMode.AUTO,
-    )
+    if "error" not in currency_data:
+        currency_news = ft.Column(
+            [
+                create_news_card(
+                    "Cotação do Dólar (USD)",
+                    f"Compra: R$ {currency_data['USD']['compra']:.2f}, Venda: R$ {currency_data['USD']['venda']:.2f}",
+                    currency_data['USD']['data'],
+                ),
+                create_news_card(
+                    "Cotação do Euro (EUR)",
+                    f"Compra: R$ {currency_data['EUR']['compra']:.2f}, Venda: R$ {currency_data['EUR']['venda']:.2f}",
+                    currency_data['EUR']['data'],
+                ),
+                create_news_card(
+                    "Cotação do Bitcoin (BTC)",
+                    f"Compra: R$ {currency_data['BTC']['compra']:.2f}, Venda: R$ {currency_data['BTC']['venda']:.2f}",
+                    currency_data['BTC']['data'],
+                ),
+            ],
+            scroll=ft.ScrollMode.AUTO,
+        )
+    else:
+        currency_news = ft.Column(
+            [
+                create_news_card(
+                    "Erro ao buscar cotações",
+                    currency_data["error"],
+                    "N/A",
+                )
+            ],
+            scroll=ft.ScrollMode.AUTO,
+        )
+
+
 
     return ft.Container(
         width=400,
@@ -115,7 +149,7 @@ def get_news_screen(page: ft.Page, on_notification: callable) -> ft.Container:
                             tabs=[
                                 ft.Tab(
                                     text="Notícias Gerais",
-                                    content=general_news,
+                                    # content=general_news,
                                     
                                 ),
                                 ft.Tab(

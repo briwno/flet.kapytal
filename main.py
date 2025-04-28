@@ -1,5 +1,7 @@
 import flet as ft
 import threading
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 from screens.analysis_screen import get_analysis_screen
 from screens.login_screen import get_login_screen
 from screens.news_screen import get_news_screen
