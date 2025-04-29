@@ -1,9 +1,12 @@
 import requests
+from dotenv import load_dotenv
+import os
 from datetime import date, timedelta
 from deep_translator import GoogleTranslator  # Substituir googletrans
 
 # API Keys
-NEWS_API_KEY = 'ce7a68989c364d7fb7492bc9bfb408f5'
+load_dotenv()
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
 # Função para traduzir o texto
 def translate_text(text, target_language="pt"):

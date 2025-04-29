@@ -1,7 +1,6 @@
 import flet as ft
 import threading
 import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
 from screens.analysis_screen import get_analysis_screen
 from screens.login_screen import get_login_screen
 from screens.news_screen import get_news_screen
@@ -13,7 +12,10 @@ from screens.notification_screen import get_notification_screen
 from screens.transaction_screen import get_transaction_screen
 from layout import create_iphone_layout
 from storage.data.user_data import register_user, authenticate_user, save_transactions
+from api.api_code import get_brazil_news, get_currency_rates
 
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def main(page: ft.Page):
     """
@@ -27,16 +29,45 @@ def main(page: ft.Page):
     page.bgcolor = ft.colors.BLACK
     page.update()
     
-    def close_dialog(tela):
-        tela.open = False
-        page.update()
-        page.go("/home")
+    def load_data():
+        global news_data, currency_data
+        try:
+            # Exibir tela de carregamento
+            loading_screen = ft.Container(
+                content=ft.Column(
+                    [
+                        ft.Text("Carregando dados...", size=20, color=ft.colors.WHITE),
+                        ft.ProgressRing(color=ft.colors.WHITE),
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+                alignment=ft.alignment.center,
+                bgcolor=ft.colors.BLACK,
+                expand=True,
+            )
+            page.add(loading_screen)
+            page.update()
+
+            # Carregar os dados das APIs
+            news_data = get_brazil_news()
+            currency_data = get_currency_rates()
+
+            # Após carregar, redirecionar para a tela inicial
+            page.go("/login")
+        except Exception as e:
+            print(f"Erro ao carregar dados: {e}")
+            page.add(ft.Text("Erro ao carregar dados", color=ft.colors.RED))
+        finally:
+            page.update()
+        
                 
     def route_change(route):
         print(f"Rota mudou para: {route}")
         page.clean()
         
         if page.route == "/":
+            load_data()  # Carrega os dados ao iniciar o aplicativo
             initial_screen = ft.Container(
                 width=390,
                 height=844,
@@ -144,7 +175,9 @@ def main(page: ft.Page):
         elif page.route == "/news":
             news_screen = get_news_screen(
                 page,
-                on_notification=lambda: page.go("/notifications")
+                on_notification=lambda: page.go("/notifications"),
+                news_data=news_data,  # Passando a variável global news_data
+                currency_data=currency_data  # Passando a variável global currency_data
             )
             page.add(ft.Row([create_iphone_layout(news_screen)], alignment=ft.MainAxisAlignment.CENTER))
         
