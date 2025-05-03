@@ -5,17 +5,18 @@ import json
 USER_DATA_FILE = os.path.join(os.path.dirname(__file__), "users.txt")
 TRANSACTIONS_FILE = os.path.join(os.path.dirname(__file__), "transactions.txt")
 
-def load_transactions():
+def load_transactions(user_id):
     if os.path.exists(TRANSACTIONS_FILE):
         with open(TRANSACTIONS_FILE, "r", encoding="utf-8") as file:
-            return json.load(file)
+            transactions = json.load(file)
+            return [t for t in transactions if t.get("user_id") == user_id]  # Filtra pelo ID do usuário
     return []
     
 def save_transactions(transaction):
     """
     Salva uma nova transação no arquivo.
     """
-    transactions = load_transactions()
+    transactions = load_transactions(transaction.get("user_id"))
     transactions.append(transaction)  # Adiciona a nova transação
     with open(TRANSACTIONS_FILE, "w", encoding="utf-8") as file:
         json.dump(transactions, file, indent=4)
@@ -35,13 +36,14 @@ def save_users(users):
 # Carregar os usuários ao iniciar
 users = load_users()
 
-def register_user(name, email, password):
+def register_user(user_id, name, email, password):
     """
     Registra um novo usuário com nome, email e senha.
     """
     if email in users:
         return False, "E-mail já registrado."
-    users[email] = {
+    users[user_id] = {
+        'id': user_id,
         'name': name,
         'email': email,
         'password': password
@@ -53,7 +55,13 @@ def authenticate_user(email, password):
     """
     Autentica um usuário com email e senha.
     """
-    user = users.get(email)
-    if user and user['password'] == password:
-        return True, user['name']  # Retorna o nome do usuário em caso de sucesso
+    for user in users.values():  # Itera sobre os valores do dicionário
+        if user['email'] == email and user['password'] == password:
+            return True, user  # Retorna o usuário autenticado
     return False, "Credenciais inválidas."
+
+def get_user_by_id(user_id):
+    """
+    Retorna os dados do usuário pelo ID.
+    """
+    return users.get(user_id, None)  # Retorna None se o usuário não for encontrado

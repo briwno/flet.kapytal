@@ -1,27 +1,20 @@
 {
-    "user1@example.com": {
-        "name": "Usu\u00e1rio 1",
-        "email": "user1@example.com",
-        "password": "senha123"
+    "7548c59e-2198-437c-b429-7ba8932ec7de": {
+        "id": "7548c59e-2198-437c-b429-7ba8932ec7de",
+        "name": "nay",
+        "email": "nay",
+        "password": "nay"
     },
-    "user2@example.com": {
-        "name": "Usu\u00e1rio 2",
-        "email": "user2@example.com",
-        "password": "senha456"
+    "123e4567-e89b-12d3-a456-426614174000": {
+        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "name": "nicolau",
+        "email": "nic",
+        "password": "nic"
     },
-    "user3@example.com": {
-        "name": "Usu\u00e1rio 3",
-        "email": "user3@example.com",
-        "password": "senha789"
-    },
-    "123": {
-        "name": "Usu\u00e1rio Simples",
-        "email": "123",
-        "password": "123"
-    },
-    "a": {
-        "name": "a",
-        "email": "a",
-        "password": "a"
+    "987f6543-21dc-43ba-9cba-123456789abc": {
+        "id": "987f6543-21dc-43ba-9cba-123456789abc",
+        "name": "jane",
+        "email": "jane@example.com",
+        "password": "securepass"
     }
 }

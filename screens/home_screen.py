@@ -2,7 +2,7 @@ import flet as ft
 from components.navbar import get_navbar
 from storage.data.user_data import load_transactions
 
-def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callable) -> ft.Container:
+def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callable, user_name: str, transactions: list) -> ft.Container:
     # Definindo cores personalizadas
     GOLD = "#FFD700"
     SOFT_GOLD = "#F7D679"
@@ -16,7 +16,69 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callabl
         on_logout()
         
     def handle_notification(e):
-        on_notification()   
+        on_notification()
+
+    def create_transaction_item(transaction):
+        return ft.Container(
+            content=ft.Row(
+                [
+                    ft.Container(
+                        content=ft.Icon(
+                            ft.icons.WORK if transaction["type"] == "receita" else ft.icons.SHOPPING_BAG,
+                            color=SOFT_GOLD,
+                            size=22,
+                        ),
+                        bgcolor=ICON_BG,
+                        padding=8,
+                        border_radius=10,
+                    ),
+                    ft.Container(width=15),
+                    ft.Column(
+                        [
+                            ft.Text(
+                                transaction["description"],
+                                size=16,
+                                weight=ft.FontWeight.W_500,
+                                color=SOFT_GOLD,
+                            ),
+                            ft.Text(
+                                transaction["date"],
+                                size=12,
+                                color="#666666",
+                            ),
+                        ],
+                        spacing=2,
+                        expand=True,
+                    ),
+                    ft.Text(
+                        f"{'-' if transaction['type'] == 'despesa' else '+'} R$ {transaction['value']:.2f}",
+                        size=16,
+                        weight=ft.FontWeight.W_500,
+                        color=RED if transaction["type"] == "despesa" else BLUE,
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            ),
+            bgcolor=CARD_BG,
+            padding=15,
+            border_radius=15,
+            margin=ft.margin.only(bottom=10),
+        )
+
+    # Calcular resumo
+    total_income = sum(t["value"] for t in transactions if t["type"] == "receita")
+    total_expense = sum(t["value"] for t in transactions if t["type"] == "despesa")
+    balance = total_income - total_expense
+    
+    opnion = "Você está indo muito bem!" if total_expense < total_income else "Cuidado com seus gastos!"
+    
+
+    # Lista de transações
+    transaction_list = ft.Column(
+        [create_transaction_item(t) for t in transactions],
+        spacing=10,
+        scroll=ft.ScrollMode.AUTO,
+    )
 
     return ft.Container(
         width=400,
@@ -35,8 +97,7 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callabl
                                 ft.Column(
                                     [
                                         ft.Text(
-                                            "Olá, Bem-vindo de volta",
-                                            
+                                            f"Olá, Bem-vindo de volta {user_name}!",
                                             size=20,
                                             weight=ft.FontWeight.BOLD,
                                             color=SOFT_GOLD,
@@ -64,8 +125,7 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callabl
                             ],
                             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                         ),
-                        
-                        ft.Container(height=25),  # Espaçamento ajustado
+                        ft.Container(height=25),
                         
                         # Saldo e Despesas
                         ft.Row(
@@ -74,11 +134,10 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callabl
                                     [
                                         ft.Text("Saldo Total", size=14, color=SOFT_GOLD, opacity=0.8),
                                         ft.Text(
-                                            "R$ 7.783,00",
+                                            f"R$ {balance:.2f}",
                                             size=26,
                                             weight=ft.FontWeight.BOLD,
-                                            color=SOFT_GOLD,
-                                        ),
+                                            color=SOFT_GOLD if balance >= 0 else RED,                                    ),
                                     ],
                                     spacing=4,
                                 ),
@@ -86,7 +145,7 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callabl
                                     [
                                         ft.Text("Despesas Totais", size=14, color=SOFT_GOLD, opacity=0.8),
                                         ft.Text(
-                                            "- R$ 1.187,40",
+                                            f"- R$ {total_expense:.2f}",
                                             size=26,
                                             weight=ft.FontWeight.BOLD,
                                             color=RED,
@@ -105,16 +164,18 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callabl
                             content=ft.Column(
                                 [
                                     ft.ProgressBar(
-                                        value=0.3,
+                                        value=(total_expense / (total_income + total_expense)) if (total_income + total_expense) > 0 else 0,
                                         bgcolor=ICON_BG,
                                         color=SOFT_GOLD,
                                         height=8,
                                         border_radius=4,
                                     ),
                                     ft.Container(height=5),
-                                    ft.Text("R$ 20.000,00", color=SOFT_GOLD, size=12, opacity=0.8),
+                                    ft.Text(f"R$ {total_income + total_expense:.2f}", color=SOFT_GOLD, size=12, opacity=0.8),
                                     ft.Text(
-                                        "30% Das Suas Despesas, Muito Bom!",
+                                        f"{(total_expense / (total_income + total_expense) * 100):.0f}% Das Suas Despesas, {opnion}"
+                                        
+                                        if (total_income + total_expense) > 0 else "Sem dados suficientes",
                                         color=SOFT_GOLD,
                                         size=14,
                                         weight=ft.FontWeight.W_500,
@@ -126,386 +187,14 @@ def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callabl
                         
                         ft.Container(height=20),
                         
-                        # Card de Economia e Alimentação
-                        ft.Container(
-                            bgcolor=CARD_BG,
-                            border_radius=15,
-                            padding=ft.padding.all(20),
-                            content=ft.Column(
-                                [
-                                    ft.Row(
-                                        [
-                                            ft.Row(
-                                                [
-                                                    ft.Container(
-                                                        content=ft.Icon(
-                                                            ft.icons.DIRECTIONS_CAR,
-                                                            color=SOFT_GOLD,
-                                                            size=22,
-                                                        ),
-                                                        bgcolor=ICON_BG,
-                                                        padding=8,
-                                                        border_radius=10,
-                                                    ),
-                                                    ft.Container(width=10),
-                                                    ft.Column(
-                                                        [
-                                                            ft.Text(
-                                                                "Economia",
-                                                                color=SOFT_GOLD,
-                                                                size=14,
-                                                                weight=ft.FontWeight.W_500,
-                                                            ),
-                                                            ft.Text(
-                                                                "em Metas",
-                                                                color=SOFT_GOLD,
-                                                                size=14,
-                                                                weight=ft.FontWeight.W_500,
-                                                                opacity=0.8,
-                                                            ),
-                                                        ],
-                                                        spacing=0,
-                                                    ),
-                                                ]
-                                            ),
-                                            ft.Column(
-                                                [
-                                                    ft.Text(
-                                                        "Receita Última Semana",
-                                                        color=SOFT_GOLD,
-                                                        size=12,
-                                                        opacity=0.8,
-                                                    ),
-                                                    ft.Text(
-                                                        "R$ 4.000,00",
-                                                        color=SOFT_GOLD,
-                                                        size=16,
-                                                        weight=ft.FontWeight.BOLD,
-                                                    ),
-                                                ],
-                                                spacing=2,
-                                                horizontal_alignment=ft.CrossAxisAlignment.END,
-                                            ),
-                                        ],
-                                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                                    ),
-                                    ft.Divider(
-                                        color=ICON_BG,
-                                        height=30,
-                                        thickness=1,
-                                    ),
-                                    ft.Row(
-                                        [
-                                            ft.Row(
-                                                [
-                                                    ft.Container(
-                                                        content=ft.Icon(
-                                                            ft.icons.RESTAURANT,
-                                                            color=SOFT_GOLD,
-                                                            size=22,
-                                                        ),
-                                                        bgcolor=ICON_BG,
-                                                        padding=8,
-                                                        border_radius=10,
-                                                    ),
-                                                    ft.Container(width=10),
-                                                    ft.Column(
-                                                        [
-                                                            ft.Text(
-                                                                "Alimentação",
-                                                                color=SOFT_GOLD,
-                                                                size=14,
-                                                                weight=ft.FontWeight.W_500,
-                                                            ),
-                                                            ft.Text(
-                                                                "Última Semana",
-                                                                color=SOFT_GOLD,
-                                                                size=12,
-                                                                opacity=0.8,
-                                                            ),
-                                                        ],
-                                                        spacing=0,
-                                                    ),
-                                                ]
-                                            ),
-                                            ft.Text(
-                                                "-R$ 100,00",
-                                                color=SOFT_GOLD,
-                                                size=16,
-                                                weight=ft.FontWeight.BOLD,
-                                            ),
-                                        ],
-                                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                                    ),
-                                ],
-                            ),
-                        ),
-                        
-                        ft.Container(height=20),
-                        
-                        # Botões de Período
-                        ft.Row(
-                            [
-                                ft.TextButton(
-                                    "Diário",
-                                    style=ft.ButtonStyle(
-                                        color="#666666",
-                                    ),
-                                ),
-                                ft.TextButton(
-                                    "Semanal",
-                                    style=ft.ButtonStyle(
-                                        color="#666666",
-                                    ),
-                                ),
-                                ft.Container(
-                                    content=ft.Text(
-                                        "Mensal",
-                                        color=DARK_BG,
-                                        weight=ft.FontWeight.W_500,
-                                    ),
-                                    bgcolor=SOFT_GOLD,
-                                    padding=ft.padding.symmetric(horizontal=20, vertical=8),
-                                    border_radius=15,
-                                ),
-                            ],
-                            alignment=ft.MainAxisAlignment.SPACE_AROUND,
-                        ),
-                        
-                        ft.Container(height=15),
-                        
-                        # Lista de Transações
-                        ft.Column(
-                            [
-                                ft.Container(
-                                    content=ft.Row(
-                                        [
-                                            ft.Container(
-                                                content=ft.Icon(
-                                                    ft.icons.WORK,
-                                                    color=SOFT_GOLD,
-                                                    size=22,
-                                                ),
-                                                bgcolor=ICON_BG,
-                                                padding=8,
-                                                border_radius=10,
-                                            ),
-                                            ft.Container(width=15),
-                                            ft.Column(
-                                                [
-                                                    ft.Text(
-                                                        "Salário",
-                                                        size=16,
-                                                        weight=ft.FontWeight.W_500,
-                                                        color=SOFT_GOLD,
-                                                    ),
-                                                    ft.Row(
-                                                        [
-                                                            ft.Text(
-                                                                "18:27 - 30 Abril",
-                                                                size=12,
-                                                                color="#666666",
-                                                            ),
-                                                            ft.Container(width=10),
-                                                            ft.Text(
-                                                                "Mensal",
-                                                                size=12,
-                                                                color="#666666",
-                                                            ),
-                                                        ],
-                                                    ),
-                                                ],
-                                                spacing=2,
-                                            ),
-                                            ft.Container(
-                                                expand=True,
-                                                content=ft.Text(
-                                                    "R$ 4.000,00",
-                                                    size=16,
-                                                    weight=ft.FontWeight.W_500,
-                                                    color=SOFT_GOLD,
-                                                    text_align=ft.TextAlign.RIGHT,
-                                                ),
-                                            ),
-                                        ],
-                                    ),
-                                    margin=ft.margin.only(bottom=15),
-                                ),
-                                ft.Container(
-                                    content=ft.Row(
-                                        [
-                                            ft.Container(
-                                                content=ft.Icon(
-                                                    ft.icons.SHOPPING_BAG,
-                                                    color=SOFT_GOLD,
-                                                    size=22,
-                                                ),
-                                                bgcolor=ICON_BG,
-                                                padding=8,
-                                                border_radius=10,
-                                            ),
-                                            ft.Container(width=15),
-                                            ft.Column(
-                                                [
-                                                    ft.Text(
-                                                        "Mercado",
-                                                        size=16,
-                                                        weight=ft.FontWeight.W_500,
-                                                        color=SOFT_GOLD,
-                                                    ),
-                                                    ft.Row(
-                                                        [
-                                                            ft.Text(
-                                                                "17:00 - 24 Abril",
-                                                                size=12,
-                                                                color="#666666",
-                                                            ),
-                                                            ft.Container(width=10),
-                                                            ft.Text(
-                                                                "Despensa",
-                                                                size=12,
-                                                                color="#666666",
-                                                            ),
-                                                        ],
-                                                    ),
-                                                ],
-                                                spacing=2,
-                                            ),
-                                            ft.Container(
-                                                expand=True,
-                                                content=ft.Text(
-                                                    "-R$ 100,00",
-                                                    size=16,
-                                                    weight=ft.FontWeight.W_500,
-                                                    color=SOFT_GOLD,
-                                                    text_align=ft.TextAlign.RIGHT,
-                                                ),
-                                            ),
-                                        ],
-                                    ),
-                                    margin=ft.margin.only(bottom=15),
-                                ),
-                                ft.Container(
-                                    content=ft.Row(
-                                        [
-                                            ft.Container(
-                                                content=ft.Icon(
-                                                    ft.icons.HOME,
-                                                    color=SOFT_GOLD,
-                                                    size=22,
-                                                ),
-                                                bgcolor=ICON_BG,
-                                                padding=8,
-                                                border_radius=10,
-                                            ),
-                                            ft.Container(width=15),
-                                            ft.Column(
-                                                [
-                                                    ft.Text(
-                                                        "Aluguel",
-                                                        size=16,
-                                                        weight=ft.FontWeight.W_500,
-                                                        color=SOFT_GOLD,
-                                                    ),
-                                                    ft.Row(
-                                                        [
-                                                            ft.Text(
-                                                                "8:30 - 15 Abril",
-                                                                size=12,
-                                                                color="#666666",
-                                                            ),
-                                                            ft.Container(width=10),
-                                                            ft.Text(
-                                                                "Moradia",
-                                                                size=12,
-                                                                color="#666666",
-                                                            ),
-                                                        ],
-                                                    ),
-                                                ],
-                                                spacing=2,
-                                            ),
-                                            ft.Container(
-                                                expand=True,
-                                                content=ft.Text(
-                                                    "-R$ 674,40",
-                                                    size=16,
-                                                    weight=ft.FontWeight.W_500,
-                                                    color=SOFT_GOLD,
-                                                    text_align=ft.TextAlign.RIGHT,
-                                                ),
-                                            ),
-                                        ],
-                                    ),
-                                    margin=ft.margin.only(bottom=15),
-                                ),
-                                ft.Container(
-                                    content=ft.Row(
-                                        [
-                                            ft.Container(
-                                                content=ft.Icon(
-                                                    ft.icons.FITNESS_CENTER,
-                                                    color=SOFT_GOLD,
-                                                    size=22,
-                                                ),
-                                                bgcolor=ICON_BG,
-                                                padding=8,
-                                                border_radius=10,
-                                            ),
-                                            ft.Container(width=15),
-                                            ft.Column(
-                                                [
-                                                    ft.Text(
-                                                        "Academia",
-                                                        size=16,
-                                                        weight=ft.FontWeight.W_500,
-                                                        color=SOFT_GOLD,
-                                                    ),
-                                                    ft.Row(
-                                                        [
-                                                            ft.Text(
-                                                                "7:00 - 10 Abril",
-                                                                size=12,
-                                                                color="#666666",
-                                                            ),
-                                                            ft.Container(width=10),
-                                                            ft.Text(
-                                                                "Saúde",
-                                                                size=12,
-                                                                color="#666666",
-                                                            ),
-                                                        ],
-                                                    ),
-                                                ],
-                                                spacing=2,
-                                            ),
-                                            ft.Container(
-                                                expand=True,
-                                                content=ft.Text(
-                                                    "-R$ 150,00",
-                                                    size=16,
-                                                    weight=ft.FontWeight.W_500,
-                                                    color=SOFT_GOLD,
-                                                    text_align=ft.TextAlign.RIGHT,
-                                                ),
-                                            ),
-                                        ],
-                                    ),
-                                    margin=ft.margin.only(bottom=15),
-                                ),
-                                ft.Container(
-                                    height=200,
-                                ),
-                            ],
-                        ),
+                        # Lista de transações
+                        transaction_list,
                     ],
                     scroll=ft.ScrollMode.AUTO,
                     expand=True,
                     alignment=ft.MainAxisAlignment.START,
-                 
                 ),
-                
-                # Using the new navbar component
+                # Navbar fixa
                 get_navbar(page, active_index=0),
             ],
         ),

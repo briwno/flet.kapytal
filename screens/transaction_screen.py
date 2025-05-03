@@ -2,7 +2,8 @@ import flet as ft
 from components.navbar import get_navbar
 from storage.data.user_data import load_transactions
 
-def get_transaction_screen(page: ft.Page, on_back: callable) -> ft.Container:
+def get_transaction_screen(page: ft.Page, on_back: callable, user_id: str) -> ft.Container:
+    transactions = load_transactions(user_id) # Filtra transações pelo ID do usuário logado
     # Definindo cores personalizadas
     DARK_BG = "#121212"
     SOFT_GOLD = "#F7D679"
@@ -18,8 +19,6 @@ def get_transaction_screen(page: ft.Page, on_back: callable) -> ft.Container:
     def handle_add_transaction(e):
         page.go("/add")  # Redireciona para a tela de adicionar transações
 
-    # Carregar transações reais
-    transactions = load_transactions()
 
     def create_transaction_item(icon, title, date, category, value, is_expense=False):
         return ft.Container(

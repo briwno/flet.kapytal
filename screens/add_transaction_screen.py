@@ -1,7 +1,7 @@
 import flet as ft
 from datetime import datetime
 
-def get_add_transaction_screen(page: ft.Page, on_save: callable) -> ft.Container:
+def get_add_transaction_screen(page: ft.Page, on_save: callable, user_id: str) -> ft.Container:
     # Definindo cores personalizadas
     DARK_BG = "#121212"
     SOFT_GOLD = "#F7D679"
@@ -91,6 +91,7 @@ def get_add_transaction_screen(page: ft.Page, on_save: callable) -> ft.Container
         if all([transaction_type.value, value_field.value, category_field.value, description_field.value]):
             try:
                 transaction_data = {
+                    "user_id": user_id,  # Usa o ID do usuário passado como argumento
                     "type": transaction_type.value,
                     "value": float(value_field.value.replace("R$ ", "").replace(",", ".")),
                     "category": category_field.value,
