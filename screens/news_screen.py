@@ -54,7 +54,7 @@ def get_news_screen(page: ft.Page, on_notification: callable, news_data, currenc
     )
 
     # Criando os cards de cotações de moedas
-    if "error" not in currency_data:
+    if isinstance(currency_data, dict) and "error" not in currency_data:
         currency_news = ft.Column(
             [
                 create_news_card(
@@ -80,7 +80,7 @@ def get_news_screen(page: ft.Page, on_notification: callable, news_data, currenc
             [
                 create_news_card(
                     "Erro ao buscar cotações",
-                    currency_data["error"],
+                    currency_data.get("error", "Formato de dados inválido") if isinstance(currency_data, dict) else "Dados indisponíveis",
                     "N/A",
                 )
             ],

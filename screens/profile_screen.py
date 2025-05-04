@@ -1,7 +1,9 @@
 import flet as ft
 from components.navbar import get_navbar
+from storage.data.user_data import get_user_credentials
 
-def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable) -> ft.Container:
+def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable, user_id: str) -> ft.Container:
+    
     # Definindo cores personalizadas
     GOLD = "#FFD700"
     SOFT_GOLD = "#F7D679"
@@ -9,8 +11,13 @@ def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable) ->
     CARD_BG = "#1A1A1A"
     ICON_BG = "#262626"
 
+    user_credentials = get_user_credentials(user_id)
+    nome, email, senha = user_credentials[0], user_credentials[1], user_credentials[2]
+
     def handle_back(e):
-        on_back()
+        if len(page.views) > 1:
+            page.views.pop()
+            page.update()
 
     def handle_logout(e):
         on_logout()
@@ -71,13 +78,13 @@ def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable) ->
                                         ),
                                     ),
                                     ft.Text(
-                                        "Bruno Mito",
+                                        nome,
                                         size=18,
                                         weight=ft.FontWeight.BOLD,
                                         color=SOFT_GOLD,
                                     ),
                                     ft.Text(
-                                        "ID: 1",
+                                        f"ID: {user_id}",
                                         size=12,
                                         color="#666666",
                                     ),
@@ -88,10 +95,9 @@ def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable) ->
                         # Lista de opções
                         ft.Column(
                             controls=[
-                                profile_option(ft.icons.EDIT, "Editar Perfil", SOFT_GOLD, ICON_BG),
-                                profile_option(ft.icons.SECURITY, "Segurança", SOFT_GOLD, ICON_BG),
-                                profile_option(ft.icons.SETTINGS, "Configurações", SOFT_GOLD, ICON_BG),
-                                profile_option(ft.icons.HELP, "Ajuda", SOFT_GOLD, ICON_BG),
+                                profile_option(ft.icons.EDIT, "Editar Dados", SOFT_GOLD, ICON_BG, on_click=lambda _: page.go("/edit_profile")),
+                                profile_option(ft.icons.SETTINGS, "Configurações", SOFT_GOLD, ICON_BG, on_click=print),
+                                profile_option(ft.icons.INFO, "Sobre", SOFT_GOLD, ICON_BG, on_click=print),
                                 profile_option(ft.icons.LOGOUT, "Sair", SOFT_GOLD, ICON_BG, on_click=handle_logout),
                             ],
                             spacing=8,

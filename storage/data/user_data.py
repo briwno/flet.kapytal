@@ -65,3 +65,29 @@ def get_user_by_id(user_id):
     Retorna os dados do usuário pelo ID.
     """
     return users.get(user_id, None)  # Retorna None se o usuário não for encontrado
+
+def get_user_credentials(user_id):
+            """
+            Retorna o nome, email e senha atuais do usuário.
+            """
+            user = get_user_by_id(user_id)
+            if user:
+                return user['name'], user['email'], user['password']
+            return None, None, None
+
+def update_user(user_id, name=None, email=None, password=None):
+    """
+    Atualiza os dados do usuário.
+    """
+    if user_id not in users:
+        return False, "Usuário não encontrado."
+    if email and email != users[user_id]['email']:
+        if email in [user['email'] for user in users.values()]:
+            return False, "E-mail já registrado."
+    if name:
+        users[user_id]['name'] = name
+    if email:
+        users[user_id]['email'] = email
+    if password:
+        users[user_id]['password'] = password
+    save_users(users)  # Salvar os dados atualizados no arquivo

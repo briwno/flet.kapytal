@@ -12,6 +12,7 @@ from screens.home_screen import get_home_screen
 from screens.add_transaction_screen import get_add_transaction_screen
 from screens.notification_screen import get_notification_screen
 from screens.transaction_screen import get_transaction_screen
+from screens.edit_profile_screen import get_edit_profile_screen
 from layout import create_iphone_layout
 from storage.data.user_data import register_user, authenticate_user, save_transactions, load_transactions
 from api.api_code import get_brazil_news, get_currency_rates
@@ -20,6 +21,8 @@ from api.api_code import get_brazil_news, get_currency_rates
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 logged_user_id = None  # Variável global para armazenar o ID do usuário logado
+news_data = []  # Variável global para armazenar os dados de notícias
+currency_data = []  # Variável global para armazenar os dados de câmbio
 
 def main(page: ft.Page):
     """
@@ -34,7 +37,6 @@ def main(page: ft.Page):
     page.update()
     
     def load_data():
-        global news_data, currency_data
         try:
             # Exibir tela de carregamento
             loading_screen = ft.Container(
@@ -243,7 +245,8 @@ def main(page: ft.Page):
             profile_screen = get_profile_screen(
                 page,
                 on_back=lambda: page.go("/home"),
-                on_logout=lambda: page.go("/login")
+                on_logout=lambda: page.go("/login"),
+                user_id=logged_user_id  # Passa o ID do usuário logado
             )
             page.views.append(
                 ft.View(
@@ -251,6 +254,20 @@ def main(page: ft.Page):
                     controls=[ft.Row([create_iphone_layout(profile_screen)], alignment=ft.MainAxisAlignment.CENTER)]
                 )
             )
+        elif page.route == "/edit_profile":
+            edit_profile_screen = get_edit_profile_screen(
+                page,
+                on_back=lambda: page.go("/home"),
+                on_logout=lambda: page.go("/login"),
+                user_id=logged_user_id  # Passa o ID do usuário logado
+            )
+            page.views.append(
+                ft.View(
+                    route="/edit_profile",
+                    controls=[ft.Row([create_iphone_layout(edit_profile_screen)], alignment=ft.MainAxisAlignment.CENTER)]
+                )
+            )
+            
         
         page.update()
 

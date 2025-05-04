@@ -1,6 +1,5 @@
 import flet as ft
 from components.navbar import get_navbar
-from storage.data.user_data import load_transactions
 
 def get_home_screen(page: ft.Page, on_logout: callable, on_notification: callable, user_name: str, transactions: list) -> ft.Container:
     # Definindo cores personalizadas
