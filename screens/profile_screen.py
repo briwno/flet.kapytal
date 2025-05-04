@@ -14,11 +14,6 @@ def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable, us
     user_credentials = get_user_credentials(user_id)
     nome, email, senha = user_credentials[0], user_credentials[1], user_credentials[2]
 
-    def handle_back(e):
-        if len(page.views) > 1:
-            page.views.pop()
-            page.update()
-
     def handle_logout(e):
         on_logout()
 
@@ -39,7 +34,7 @@ def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable, us
                                     ft.IconButton(
                                         icon=ft.icons.ARROW_BACK,
                                         icon_color=SOFT_GOLD,
-                                        on_click=handle_back,
+                                        on_click=on_back(),
                                         icon_size=20,
                                     ),
                                     ft.Text(
@@ -96,8 +91,8 @@ def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable, us
                         ft.Column(
                             controls=[
                                 profile_option(ft.icons.EDIT, "Editar Dados", SOFT_GOLD, ICON_BG, on_click=lambda _: page.go("/edit_profile")),
-                                profile_option(ft.icons.SETTINGS, "Configurações", SOFT_GOLD, ICON_BG, on_click=print),
-                                profile_option(ft.icons.INFO, "Sobre", SOFT_GOLD, ICON_BG, on_click=print),
+                                profile_option(ft.icons.SETTINGS, "Configurações", SOFT_GOLD, ICON_BG, on_click=lambda _: page.go("/settings")),
+                                profile_option(ft.icons.INFO, "Sobre", SOFT_GOLD, ICON_BG, on_click=lambda _: page.go("/info")),
                                 profile_option(ft.icons.LOGOUT, "Sair", SOFT_GOLD, ICON_BG, on_click=handle_logout),
                             ],
                             spacing=8,

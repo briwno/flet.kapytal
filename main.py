@@ -2,6 +2,8 @@ import flet as ft
 import threading
 import warnings
 import uuid
+from screens.info_screen import get_info_screen
+from screens.settings_screen import get_settings_screen
 from storage.data.user_data import get_user_by_id
 from screens.analysis_screen import get_analysis_screen
 from screens.login_screen import get_login_screen
@@ -21,8 +23,7 @@ from api.api_code import get_brazil_news, get_currency_rates
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 logged_user_id = None  # Variável global para armazenar o ID do usuário logado
-news_data = []  # Variável global para armazenar os dados de notícias
-currency_data = []  # Variável global para armazenar os dados de câmbio
+
 
 def main(page: ft.Page):
     """
@@ -54,9 +55,12 @@ def main(page: ft.Page):
             )
             page.add(loading_screen)
             page.update()
+            
+            
 
             # Carregar os dados das APIs
-            news_data = get_brazil_news()
+            global news_data, currency_data
+            # news_data = get_brazil_news()
             currency_data = get_currency_rates()
 
             # Após carregar, redirecionar para a tela inicial
@@ -232,7 +236,7 @@ def main(page: ft.Page):
             news_screen = get_news_screen(
                 page,
                 on_notification=lambda: page.go("/notifications"),
-                news_data=news_data,  # Passando a variável global news_data
+                news_data= None,  # Passando a variável global news_data
                 currency_data=currency_data  # Passando a variável global currency_data
             )
             page.views.append(
@@ -265,6 +269,30 @@ def main(page: ft.Page):
                 ft.View(
                     route="/edit_profile",
                     controls=[ft.Row([create_iphone_layout(edit_profile_screen)], alignment=ft.MainAxisAlignment.CENTER)]
+                )
+            )
+        elif page.route == "/info":
+            info_screen = get_info_screen(
+                page,
+                on_back=lambda: page.go("/home"),
+                on_logout=lambda: page.go("/login")
+            )
+            page.views.append(
+                ft.View(
+                    route="/info",
+                    controls=[ft.Row([create_iphone_layout(info_screen)], alignment=ft.MainAxisAlignment.CENTER)]
+                )
+            )
+        elif page.route == "/settings":
+            settings_screen = get_settings_screen(
+                page,
+                on_back=lambda: page.go("/home"),
+                on_logout=lambda: page.go("/login")
+            )
+            page.views.append(
+                ft.View(
+                    route="/settings",
+                    controls=[ft.Row([create_iphone_layout(settings_screen)], alignment=ft.MainAxisAlignment.CENTER)]
                 )
             )
             

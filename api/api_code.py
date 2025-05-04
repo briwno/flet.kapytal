@@ -14,32 +14,32 @@ def translate_text(text, target_language="pt"):
 
 # Função para obter notícias econômicas do Brasil
 def get_brazil_news():
-    # url = 'https://newsapi.org/v2/top-headlines'
-    # params = {
-    #     'category': 'business',
-    #     'apiKey': NEWS_API_KEY,
-    # }
-    # response = requests.get(url, params=params)
-    # if response.status_code == 200:
-    #     articles = response.json().get('articles', [])
-    #     # Traduzindo as notícias antes de retorná-las
-    #     translated_articles = []
-    #     for article in articles:
-    #         title = article.get('title', 'Título não disponível')
-    #         description = article.get('description', 'Descrição não disponível')
+    url = 'https://newsapi.org/v2/top-headlines'
+    params = {
+        'category': 'business',
+        'apiKey': NEWS_API_KEY,
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        articles = response.json().get('articles', [])
+        # Traduzindo as notícias antes de retorná-las
+        translated_articles = []
+        for article in articles:
+            title = article.get('title', 'Título não disponível')
+            description = article.get('description', 'Descrição não disponível')
 
-    #         # Verifica se os campos não são None antes de traduzir
-    #         title_pt = translate_text(title) if title else "Título não disponível"
-    #         description_pt = translate_text(description) if description else "Descrição não disponível"
+            # Verifica se os campos não são None antes de traduzir
+            title_pt = translate_text(title) if title else "Título não disponível"
+            description_pt = translate_text(description) if description else "Descrição não disponível"
 
-    #         translated_articles.append({
-    #             'title': title_pt,
-    #             'description': description_pt,
-    #             'url': article.get('url', '#'),
-    #             'publishedAt': article.get('publishedAt', 'Data não disponível')
-    #         })
-    #     return translated_articles
-    # else:
+            translated_articles.append({
+                'title': title_pt,
+                'description': description_pt,
+                'url': article.get('url', '#'),
+                'publishedAt': article.get('publishedAt', 'Data não disponível')
+            })
+        return translated_articles
+    else:
         print(f"Error fetching news: {response.status_code}")
         return []
 

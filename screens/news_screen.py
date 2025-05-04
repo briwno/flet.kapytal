@@ -55,6 +55,7 @@ def get_news_screen(page: ft.Page, on_notification: callable, news_data, currenc
 
     # Criando os cards de cotações de moedas
     if isinstance(currency_data, dict) and "error" not in currency_data:
+        print(currency_data)
         currency_news = ft.Column(
             [
                 create_news_card(

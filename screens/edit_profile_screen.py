@@ -11,7 +11,7 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
     ICON_BG = "#262626"
 
     user_credentials = get_user_credentials(user_id)
-    nome, email, senha = user_credentials[0], user_credentials[1], user_credentials[2]
+    nome, email = user_credentials[0], user_credentials[1]
 
     def handle_back(e):
         if len(page.views) > 1:
@@ -22,12 +22,12 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
         on_logout()
 
     def handle_save(e):
-        if name_input.value and email_input.value and password_input.value:
+        if name_input.value and email_input.value and phone_input.value:
             success, message = update_user(
                 user_id,
                 name=name_input.value,
                 email=email_input.value,
-                password=password_input.value,
+                phone=phone_input.value,
             )
             if success:
                 print("Dados atualizados com sucesso!")
@@ -39,13 +39,13 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
 
     # Campos de entrada para edição de perfil
     name_input = ft.TextField(
-        label="Nome", value=nome, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
+        label="Nome", hint_text=nome, value=nome, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
     )
     email_input = ft.TextField(
-        label="E-mail", value=email, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
+        label="E-mail", hint_text=email, value=email, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
     )
-    password_input = ft.TextField(
-        label="Senha", value=senha, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD, password=True
+    phone_input = ft.TextField(
+        label="Telefone", hint_text="+55 41 99861 9866", value="", bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
     )
 
     return ft.Container(
@@ -90,7 +90,7 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
                                     ft.Container(height=10),
                                     email_input,
                                     ft.Container(height=10),
-                                    password_input,
+                                    phone_input,
                                     ft.Container(height=20),
                                     ft.ElevatedButton(
                                         "Salvar",
