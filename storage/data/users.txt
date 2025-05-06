@@ -1,15 +1,17 @@
 {
     "7548c59e-2198-437c-b429-7ba8932ec7de": {
         "id": "7548c59e-2198-437c-b429-7ba8932ec7de",
-        "name": "nay",
+        "name": "nanay do bruno",
         "email": "nay",
-        "password": "nay"
+        "password": "nay",
+        "phone": "4141414141"
     },
     "123e4567-e89b-12d3-a456-426614174000": {
         "id": "123e4567-e89b-12d3-a456-426614174000",
         "name": "nicolau",
         "email": "nic",
-        "password": "nic"
+        "password": "nic",
+        "phone": "987654321"
     },
     "987f6543-21dc-43ba-9cba-123456789abc": {
         "id": "987f6543-21dc-43ba-9cba-123456789abc",

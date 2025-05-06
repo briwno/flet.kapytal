@@ -11,7 +11,7 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
     ICON_BG = "#262626"
 
     user_credentials = get_user_credentials(user_id)
-    nome, email = user_credentials[0], user_credentials[1]
+    nome, email, phone = user_credentials[0], user_credentials[1], user_credentials[3]
 
     def handle_back(e):
         if len(page.views) > 1:
@@ -27,7 +27,7 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
                 user_id,
                 name=name_input.value,
                 email=email_input.value,
-                phone=phone_input.value,
+                phone=phone_input.value,  # Adiciona o telefone
             )
             if success:
                 print("Dados atualizados com sucesso!")
@@ -45,7 +45,7 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
         label="E-mail", hint_text=email, value=email, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
     )
     phone_input = ft.TextField(
-        label="Telefone", hint_text="+55 41 99861 9866", value="", bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
+        label="Telefone", hint_text="+55 41 99861 9866", value=phone, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
     )
 
     return ft.Container(

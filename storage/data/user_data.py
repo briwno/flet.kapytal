@@ -46,7 +46,8 @@ def register_user(user_id, name, email, password):
         'id': user_id,
         'name': name,
         'email': email,
-        'password': password
+        'password': password,
+        'phone': None,  # Inicializa o telefone como None
     }
     save_users(users)  # Salvar os dados atualizados no arquivo
     return True, "Usuário registrado com sucesso."
@@ -75,7 +76,7 @@ def get_user_credentials(user_id):
                 return user['name'], user['email'], user['password']
             return None, None, None
 
-def update_user(user_id, name=None, email=None, password=None):
+def update_user(user_id, name=None, email=None, password=None, phone=None):
     """
     Atualiza os dados do usuário.
     """
@@ -90,4 +91,7 @@ def update_user(user_id, name=None, email=None, password=None):
         users[user_id]['email'] = email
     if password:
         users[user_id]['password'] = password
+    if phone:
+        users[user_id]['phone'] = phone
     save_users(users)  # Salvar os dados atualizados no arquivo
+    return True, "Usuário atualizado com sucesso."
