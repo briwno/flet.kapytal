@@ -301,7 +301,9 @@ def main(page: ft.Page):
         elif page.route == "/change_password":
             change_password_screen = get_change_password_screen(
                 page,
+                
                 on_back=lambda: page.go("/settings"),
+                user_id=logged_user_id  # Passa o ID do usuário logado
             )
             page.views.append(
                 ft.View(

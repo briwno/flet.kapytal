@@ -1,5 +1,7 @@
 import flet as ft
 from components.navbar import get_navbar
+from storage.data.user_data import get_user_by_id
+from storage.data.user_data import update_user
 
 def get_settings_screen(page: ft.Page, on_back: callable, on_logout: callable) -> ft.Container:
     # Definindo cores personalizadas
@@ -154,13 +156,84 @@ def settings_option(icon, text, color, bgcolor, on_click=None):
         margin=ft.margin.symmetric(vertical=4, horizontal=20),
     )
 
-def get_change_password_screen(page: ft.Page, on_back: callable) -> ft.Container:
+def get_change_password_screen(page: ft.Page, on_back: callable,  user_id: str) -> ft.Container:
     DARK_BG = "#121212"
     SOFT_GOLD = "#F7D679"
     CARD_BG = "#1A1A1A"
 
+    # Campos de texto precisam ser definidos fora do handler para acesso
+    texfield_senha_atual = ft.TextField(
+        label="Senha Atual",
+        password=True,
+        bgcolor=CARD_BG,
+        color=SOFT_GOLD,
+    )
+    texfield_nova_senha = ft.TextField(
+        label="Nova Senha",
+        password=True,
+        bgcolor=CARD_BG,
+        color=SOFT_GOLD,
+    )
+    texfield_confirmar_senha = ft.TextField(
+        label="Confirmar Nova Senha",
+        password=True,
+        bgcolor=CARD_BG,
+        color=SOFT_GOLD,
+    )
+
     def handle_save(e):
-        print("Senha alterada com sucesso!")  # Substituir pela lógica de alteração de senha
+        senha_atual = texfield_senha_atual.value
+        nova_senha = texfield_nova_senha.value
+        confirmar_senha = texfield_confirmar_senha.value
+        user = get_user_by_id(user_id)
+
+        if senha_atual != user["password"]:
+            page.snackbar = ft.SnackBar(
+                ft.Text("Senha atual incorreta."),
+                bgcolor="#FF0000",
+            )
+            page.snackbar.open = True
+            page.update()
+            return
+
+        if not nova_senha or not confirmar_senha:
+            page.snackbar = ft.SnackBar(
+                ft.Text("Preencha todos os campos."),
+                bgcolor="#FF0000",
+            )
+            page.snackbar.open = True
+            page.update()
+            return
+
+        if nova_senha != confirmar_senha:
+            page.snackbar = ft.SnackBar(
+                ft.Text("As senhas não coincidem."),
+                bgcolor="#FF0000",
+            )
+            page.snackbar.open = True
+            page.update()
+            return
+
+        # Atualiza a senha
+        success, message = update_user(
+            user_id,
+            password=nova_senha
+        )
+        if not success:
+            page.snackbar = ft.SnackBar(
+                ft.Text(message),
+                bgcolor="#FF0000",
+            )
+            page.snackbar.open = True
+            page.update()
+            return
+
+        page.snackbar = ft.SnackBar(
+            ft.Text("Senha alterada com sucesso!"),
+            bgcolor="#4BB543",
+        )
+        page.snackbar.open = True
+        page.update()
         page.go("/settings")
 
     return ft.Container(
@@ -168,7 +241,7 @@ def get_change_password_screen(page: ft.Page, on_back: callable) -> ft.Container
         height=830,
         bgcolor=DARK_BG,
         border_radius=ft.border_radius.all(35),
-        content=ft.Container(  # Adicionado Container para padding
+        content=ft.Container(
             padding=20,
             content=ft.Column(
                 [
@@ -189,24 +262,9 @@ def get_change_password_screen(page: ft.Page, on_back: callable) -> ft.Container
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     ),
                     ft.Container(height=20),
-                    ft.TextField(
-                        label="Senha Atual",
-                        password=True,
-                        bgcolor=CARD_BG,
-                        color=SOFT_GOLD,
-                    ),
-                    ft.TextField(
-                        label="Nova Senha",
-                        password=True,
-                        bgcolor=CARD_BG,
-                        color=SOFT_GOLD,
-                    ),
-                    ft.TextField(
-                        label="Confirmar Nova Senha",
-                        password=True,
-                        bgcolor=CARD_BG,
-                        color=SOFT_GOLD,
-                    ),
+                    texfield_senha_atual,
+                    texfield_nova_senha,
+                    texfield_confirmar_senha,
                     ft.ElevatedButton(
                         "Salvar",
                         on_click=handle_save,
