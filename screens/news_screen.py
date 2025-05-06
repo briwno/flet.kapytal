@@ -16,6 +16,41 @@ def get_news_screen(page: ft.Page, on_notification: callable, news_data, currenc
 
     def handle_notification(e):
         on_notification()
+        
+    def convert_currency(value, conversion_rate):
+        """
+        Converte um valor para outra moeda com base na taxa de conversão fornecida.
+
+        Args:
+            value (str | int | float): O valor a ser convertido.
+            conversion_rate (float): A taxa de conversão (exemplo: 1 BRL para USD).
+
+        Returns:
+            str: O valor convertido formatado como moeda.
+        """
+        # Verifica se o valor é uma string e tenta converter para float
+        if isinstance(value, str):
+            value = re.sub(r'[^\d.]', '', value)
+            value = float(value) if value else 0.0
+
+        # Verifica se o valor é um número e realiza a conversão
+        if isinstance(value, (int, float)):
+            converted_value = value * conversion_rate
+            return f"R$ {converted_value:.2f}"
+        return "Valor inválido"
+
+    # Função para conversão de moeda
+    def handle_currency_conversion(e):
+        try:
+            amount = float(input_field.value)
+            selected_currency = currency_dropdown.value  # Obtém a moeda selecionada
+            conversion_rate = currency_data[selected_currency]['compra']  # Usa a taxa de compra da moeda selecionada
+            converted_value = amount / conversion_rate  # Divide o valor em BRL pela taxa de compra
+            result_text.value = f"{selected_currency}: {converted_value:,.2f}"  # Formata com separadores de milhar
+            result_text.update()
+        except (ValueError, KeyError):
+            result_text.value = "Erro na conversão. Verifique os dados."
+            result_text.update()
 
     def create_news_card(title, description, date, link=None):
         return ft.Container(
@@ -59,18 +94,13 @@ def get_news_screen(page: ft.Page, on_notification: callable, news_data, currenc
         currency_news = ft.Column(
             [
                 create_news_card(
-                    "Cotação do Dólar (USD)",
-                    f"Compra: R$ {currency_data['USD']['compra']:.2f}, Venda: R$ {currency_data['USD']['venda']:.2f}",
-                    currency_data['USD']['data'],
-                ),
-                create_news_card(
-                    "Cotação do Euro (EUR)",
-                    f"Compra: R$ {currency_data['EUR']['compra']:.2f}, Venda: R$ {currency_data['EUR']['venda']:.2f}",
-                    currency_data['EUR']['data'],
-                ),
-                create_news_card(
                     "Cotação do Bitcoin (BTC)",
-                    f"Compra: R$ {currency_data['BTC']['compra']:.2f}, Venda: R$ {currency_data['BTC']['venda']:.2f}",
+                    (
+                        f"1 Bitcoin (BTC) equivale a:\n"
+                        f"Compra: R$ {currency_data['BTC']['compra']:,.2f}\n"
+                        f"Venda: R$ {currency_data['BTC']['venda']:,.2f}\n"
+                        f"Última atualização: {currency_data['BTC']['data']}"
+                    ),
                     currency_data['BTC']['data'],
                 ),
             ],
@@ -87,6 +117,59 @@ def get_news_screen(page: ft.Page, on_notification: callable, news_data, currenc
             ],
             scroll=ft.ScrollMode.AUTO,
         )
+
+    # Campo de entrada para o valor em BRL
+    input_field = ft.TextField(
+        label="Valor em BRL",
+        keyboard_type=ft.KeyboardType.NUMBER,
+        width=200,
+    )
+
+    # Dropdown para selecionar a moeda de destino
+    currency_dropdown = ft.Dropdown(
+        label="Selecionar moeda",
+        options=[
+            ft.dropdown.Option("USD"),  # Dólar Americano
+            ft.dropdown.Option("EUR"),  # Euro
+            ft.dropdown.Option("ARS"),  # Peso Argentino
+        ],
+        value="USD",  # Valor padrão
+        width=200,
+    )
+
+    # Botão para realizar a conversão
+    convert_button = ft.ElevatedButton(
+        text=f"Converter",
+        on_click=handle_currency_conversion,
+    )
+
+    # Texto para exibir o resultado da conversão
+    result_text = ft.Text(
+        value="",
+        size=14,
+        color=TEXT_COLOR,
+    )
+
+    # Adicionando o campo de conversão na aba "Moedas"
+    currency_news.controls.insert(
+        0,
+        ft.Container(
+            content=ft.Column(
+                [
+                    ft.Text("Conversor de Moeda", size=16, weight=ft.FontWeight.BOLD, color=SOFT_GOLD),
+                    input_field,
+                    currency_dropdown,
+                    convert_button,
+                    result_text,
+                ],
+                spacing=10,
+            ),
+            bgcolor=CARD_BG,
+            padding=15,
+            border_radius=15,
+            margin=ft.margin.only(bottom=10),
+        )
+    )
 
     return ft.Container(
         width=400,

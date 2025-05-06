@@ -236,7 +236,7 @@ def main(page: ft.Page):
             news_screen = get_news_screen(
                 page,
                 on_notification=lambda: page.go("/notifications"),
-                news_data= None,  # Passando a variável global news_data
+                news_data= get_brazil_news(),  # Obtém as notícias do Brasil
                 currency_data=currency_data  # Passando a variável global currency_data
             )
             page.views.append(

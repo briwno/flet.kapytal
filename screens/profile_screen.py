@@ -34,7 +34,7 @@ def get_profile_screen(page: ft.Page, on_back: callable, on_logout: callable, us
                                     ft.IconButton(
                                         icon=ft.icons.ARROW_BACK,
                                         icon_color=SOFT_GOLD,
-                                        on_click=on_back(),
+                                        on_click=lambda: on_back(),
                                         icon_size=20,
                                     ),
                                     ft.Text(
