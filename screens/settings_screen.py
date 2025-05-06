@@ -153,3 +153,149 @@ def settings_option(icon, text, color, bgcolor, on_click=None):
         border_radius=12,
         margin=ft.margin.symmetric(vertical=4, horizontal=20),
     )
+
+def get_change_password_screen(page: ft.Page, on_back: callable) -> ft.Container:
+    DARK_BG = "#121212"
+    SOFT_GOLD = "#F7D679"
+    CARD_BG = "#1A1A1A"
+
+    def handle_save(e):
+        print("Senha alterada com sucesso!")  # Substituir pela lógica de alteração de senha
+        page.go("/settings")
+
+    return ft.Container(
+        width=400,
+        height=830,
+        bgcolor=DARK_BG,
+        border_radius=ft.border_radius.all(35),
+        content=ft.Container(  # Adicionado Container para padding
+            padding=20,
+            content=ft.Column(
+                [
+                    ft.Row(
+                        [
+                            ft.IconButton(
+                                icon=ft.icons.ARROW_BACK,
+                                icon_color=SOFT_GOLD,
+                                on_click=lambda _: on_back(),
+                            ),
+                            ft.Text(
+                                "Alterar Senha",
+                                size=20,
+                                weight=ft.FontWeight.BOLD,
+                                color=SOFT_GOLD,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    ),
+                    ft.Container(height=20),
+                    ft.TextField(
+                        label="Senha Atual",
+                        password=True,
+                        bgcolor=CARD_BG,
+                        color=SOFT_GOLD,
+                    ),
+                    ft.TextField(
+                        label="Nova Senha",
+                        password=True,
+                        bgcolor=CARD_BG,
+                        color=SOFT_GOLD,
+                    ),
+                    ft.TextField(
+                        label="Confirmar Nova Senha",
+                        password=True,
+                        bgcolor=CARD_BG,
+                        color=SOFT_GOLD,
+                    ),
+                    ft.ElevatedButton(
+                        "Salvar",
+                        on_click=handle_save,
+                        bgcolor=SOFT_GOLD,
+                        color=DARK_BG,
+                    ),
+                ],
+                spacing=20,
+            ),
+        ),
+    )
+    
+def get_notifications_settings_screen(page: ft.Page, on_back: callable) -> ft.Container:
+    DARK_BG = "#121212"
+    SOFT_GOLD = "#F7D679"
+
+    return ft.Container(
+        width=400,
+        height=830,
+        bgcolor=DARK_BG,
+        border_radius=ft.border_radius.all(35),
+        content=ft.Container(  # Adicionado Container para padding
+            padding=20,
+            content=ft.Column(
+                [
+                    ft.Row(
+                        [
+                            ft.IconButton(
+                                icon=ft.icons.ARROW_BACK,
+                                icon_color=SOFT_GOLD,
+                                on_click=lambda _: on_back(),
+                            ),
+                            ft.Text(
+                                "Configurações de Notificações",
+                                size=20,
+                                weight=ft.FontWeight.BOLD,
+                                color=SOFT_GOLD,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    ),
+                    ft.Switch(label="Notificações por E-mail", value=True),
+                    ft.Switch(label="Notificações Push", value=False),
+                ],
+                spacing=20,
+            ),
+        ),
+    )
+    
+def get_theme_settings_screen(page: ft.Page, on_back: callable) -> ft.Container:
+    DARK_BG = "#121212"
+    SOFT_GOLD = "#F7D679"
+
+    return ft.Container(
+        width=400,
+        height=830,
+        bgcolor=DARK_BG,
+        border_radius=ft.border_radius.all(35),
+        content=ft.Container(  # Adicionado Container para padding
+            padding=20,
+            content=ft.Column(
+                [
+                    ft.Row(
+                        [
+                            ft.IconButton(
+                                icon=ft.icons.ARROW_BACK,
+                                icon_color=SOFT_GOLD,
+                                on_click=lambda _: on_back(),
+                            ),
+                            ft.Text(
+                                "Configurações de Tema",
+                                size=20,
+                                weight=ft.FontWeight.BOLD,
+                                color=SOFT_GOLD,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    ),
+                    ft.RadioGroup(
+                        value="dark",
+                        content=ft.Column(  # Envolvendo os itens em um Column
+                            controls=[
+                                ft.Radio(value="light", label="Tema Claro"),
+                                ft.Radio(value="dark", label="Tema Escuro"),
+                            ],
+                        ),
+                    ),
+                ],
+                spacing=20,
+            ),
+        ),
+    )
