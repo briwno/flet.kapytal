@@ -42,37 +42,12 @@ def main(page: ft.Page):
     
     def load_data():
         try:
-            # Exibir tela de carregamento
-            loading_screen = ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Text("Carregando dados...", size=20, color=ft.colors.WHITE),
-                        ft.ProgressRing(color=ft.colors.WHITE),
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                ),
-                alignment=ft.alignment.center,
-                bgcolor=ft.colors.BLACK,
-                expand=True,
-            )
-            page.add(loading_screen)
-            page.update()
-            
-            
-
-            # Carregar os dados das APIs
-            global news_data, currency_data
-            # news_data = get_brazil_news()
+            global news_data, currency_data  # Variáveis globais para armazenar os dados
+            news_data = get_brazil_news()
             currency_data = get_currency_rates()
-
-            # Após carregar, redirecionar para a tela inicial
-            page.go("/login")
+            print("Dados carregados com sucesso!")
         except Exception as e:
             print(f"Erro ao carregar dados: {e}")
-            page.add(ft.Text("Erro ao carregar dados", color=ft.colors.RED))
-        finally:
-            page.update()
         
                 
     def route_change(route):
@@ -107,14 +82,17 @@ def main(page: ft.Page):
                 )
             )
             
-            threading.Timer(0.5, lambda: page.go("/login")).start()  # Redireciona após 0.5 segundos
-            
+            # Adiciona a tela inicial
             page.views.append(
                 ft.View(
                     route="/",
                     controls=[ft.Row([create_iphone_layout(initial_screen)], alignment=ft.MainAxisAlignment.CENTER)]
                 )
             )
+            page.update()
+
+            # Redireciona para a tela de login após exibir a tela inicial
+            page.go("/login")
             
         elif page.route == "/login":
             def handle_login(email, password):
@@ -239,8 +217,8 @@ def main(page: ft.Page):
             news_screen = get_news_screen(
                 page,
                 on_notification=lambda: page.go("/notifications"),
-                news_data= get_brazil_news(),  # Obtém as notícias do Brasil
-                currency_data=currency_data  # Passando a variável global currency_data
+                news_data=news_data,  # Dados carregados uma vez
+                currency_data=currency_data  # Dados carregados uma vez
             )
             page.views.append(
                 ft.View(

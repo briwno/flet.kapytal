@@ -1,6 +1,5 @@
 import flet as ft
 from components.navbar import get_navbar
-from api.api_code import get_brazil_news, get_currency_rates
 from datetime import date, timedelta
 import re
 from html import unescape  # Para decodificar entidades HTML

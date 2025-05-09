@@ -14,48 +14,39 @@ def translate_text(text, target_language="pt"):
 
 # Função para obter notícias econômicas do Brasil
 def get_brazil_news():
-    # # URL da API de notícias
-    # url = 'https://newsapi.org/v2/top-headlines'
-    # # Parâmetros para a requisição, incluindo a categoria e a chave da API
-    # params = {
-    #     'category': 'business',  # Categoria de notícias de negócios
-    #     'apiKey': NEWS_API_KEY,  # Chave da API obtida do arquivo .env
-    # }
-    # # Fazendo a requisição para a API
-    # response = requests.get(url, params=params)
+    #  URL da API de notícias
+    url = 'https://newsapi.org/v2/top-headlines'
+    # Parâmetros para a requisição, incluindo a categoria e a chave da API
+    params = {
+        'category': 'business',  # Categoria de notícias de negócios
+        'apiKey': NEWS_API_KEY,  # Chave da API obtida do arquivo .env
+    }
+    # Fazendo a requisição para a API
+    response = requests.get(url, params=params)
     
-    # # Verifica se a resposta foi bem-sucedida
-    # if response.status_code == 200:
-    #     # Obtém os artigos da resposta JSON
-    #     articles = response.json().get('articles', [])
-    #     # Lista para armazenar os artigos traduzidos
-    #     translated_articles = []
-    #     for article in articles:
-    #         # Obtém o título e a descrição do artigo
-    #         title = article.get('title', 'Título não disponível')
-    #         description = article.get('description', 'Descrição não disponível')
+    # Verifica se a resposta foi bem-sucedida
+    if response.status_code == 200:
+        # Obtém os artigos da resposta JSON
+        articles = response.json().get('articles', [])
+        # Lista para armazenar os artigos traduzidos
+        translated_articles = []
+        for article in articles:
+            # Obtém o título e a descrição do artigo
+            title = article.get('title', 'Título não disponível')
+            description = article.get('description', 'Descrição não disponível')
 
-    #         # Traduz os campos se eles não forem None
-    #         title_pt = translate_text(title) if title else "Título não disponível"
-    #         description_pt = translate_text(description) if description else "Descrição não disponível"
+            # Traduz os campos se eles não forem None
+            title_pt = translate_text(title) if title else "Título não disponível"
+            description_pt = translate_text(description) if description else "Descrição não disponível"
 
-    #         # Adiciona o artigo traduzido à lista
-    #         translated_articles.append({
-    #             'title': title_pt,
-    #             'description': description_pt,
-    #             'url': article.get('url', '#'),
-    #             'publishedAt': article.get('publishedAt', 'Data não disponível')
-    #         })
-    #     return translated_articles
-    # else:
-        # Caso ocorra um erro, retorna uma notícia genérica
-        print(f"Erro ao buscar notícia")
-        return [{
-            'title': 'Notícia genérica',
-            'description': 'Não foi possível obter notícias no momento.',
-            'url': '#',
-            'publishedAt': 'Data não disponível'
-        }]
+            # Adiciona o artigo traduzido à lista
+            translated_articles.append({
+                'title': title_pt,
+                'description': description_pt,
+                'url': article.get('url', '#'),
+                'publishedAt': article.get('publishedAt', 'Data não disponível')
+            })
+        return translated_articles
 
 # Função para obter a cotação do USD
 def get_currency_rates():

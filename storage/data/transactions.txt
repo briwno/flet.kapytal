@@ -1,18 +1,18 @@
 [
     {
-        "user_id": "7548c59e-2198-437c-b429-7ba8932ec7de",
-        "type": "despesa",
-        "value": 1000.0,
-        "category": "Lazer",
-        "description": "10 mil batatinha pro bruno amor da minha vida",
-        "date": "03/05/2025"
-    },
-    {
         "user_id": "123e4567-e89b-12d3-a456-426614174000",
         "type": "despesa",
         "value": 2500.0,
         "category": "Lazer",
-        "description": "apostas e putas",
+        "description": "apostas",
         "date": "01/05/2025"
+    },
+    {
+        "user_id": "123e4567-e89b-12d3-a456-426614174000",
+        "type": "receita",
+        "value": 1000.0,
+        "category": "salario",
+        "description": "jkj",
+        "date": "09/05/2025"
     }
 ]
