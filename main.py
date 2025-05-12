@@ -165,7 +165,8 @@ def main(page: ft.Page):
         elif page.route == "/analysis":
             analysis_screen = get_analysis_screen(
                 page,
-                on_notification=lambda: page.go("/notifications")
+                on_notification=lambda: page.go("/notifications"),
+                transactions=load_transactions(logged_user_id),  # Carrega as transações do usuário logado
             )
             page.views.append(
                 ft.View(

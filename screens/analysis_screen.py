@@ -1,7 +1,8 @@
 import flet as ft
 from components.navbar import get_navbar
+import datetime
 
-def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Container:
+def get_analysis_screen(page: ft.Page, on_notification: callable, transactions: list) -> ft.Container:
     # Definindo cores personalizadas
     GOLD = "#FFD700"
     SOFT_GOLD = "#F7D679"
@@ -13,6 +14,30 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
     GREEN = "#00FF00"
     RED = "#FF3E3E"
     
+    #calculos
+    total_income = sum(t["value"] for t in transactions if t["type"] == "receita")
+    total_expense = sum(t["value"] for t in transactions if t["type"] == "despesa")
+    balance = total_income - total_expense
+    percent_expense = (total_expense / (total_income + total_expense)) if (total_income + total_expense) > 0 else 0
+    
+    # Dias da semana em português
+    dias_semana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"]
+
+    # Inicializa os valores
+    receitas_por_dia = [0] * 7
+    despesas_por_dia = [0] * 7
+
+    for t in transactions:
+        try:
+            data = datetime.datetime.strptime(t["date"], "%d/%m/%Y")
+            idx = (data.weekday())  # 0=Segunda, 6=Domingo
+            if t["type"] == "receita":
+                receitas_por_dia[idx] += t["value"]
+            elif t["type"] == "despesa":
+                despesas_por_dia[idx] += t["value"]
+        except Exception:
+            pass  # Ignora datas inválidas
+
     def handle_notification(e):
         on_notification()
 
@@ -60,7 +85,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                     [
                                         ft.Text("Saldo Total", size=14, color=SOFT_GOLD, opacity=0.8),
                                         ft.Text(
-                                            "R$ 7.783,00",
+                                            f"R$ {total_income - total_expense:.2f}",
                                             size=26,
                                             weight=ft.FontWeight.BOLD,
                                             color=SOFT_GOLD,
@@ -72,7 +97,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                     [
                                         ft.Text("Despesas Totais", size=14, color=SOFT_GOLD, opacity=0.8),
                                         ft.Text(
-                                            "- R$ 1.187,40",
+                                            f"R$ {total_expense:.2f}",
                                             size=26,
                                             weight=ft.FontWeight.BOLD,
                                             color=RED,
@@ -91,24 +116,21 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                             content=ft.Column(
                                 [
                                     ft.ProgressBar(
-                                        value=0.3,
+                                        value=(total_expense / (total_income + total_expense)) if (total_income + total_expense) > 0 else 0,
                                         bgcolor=ICON_BG,
                                         color=SOFT_GOLD,
                                         height=8,
                                         border_radius=4,
                                     ),
                                     ft.Container(height=5),
-                                    ft.Row(
-                                        [
-                                            ft.Text("R$ 20.000,00", color=SOFT_GOLD, size=12, opacity=0.8),
-                                            ft.Text(
-                                                "30% das suas despesas, muito bom!",
-                                                color=SOFT_GOLD,
-                                                size=14,
-                                                weight=ft.FontWeight.W_500,
-                                            ),
-                                        ],
-                                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                                    ft.Text(f"R$ {total_income + total_expense:.2f}", color=SOFT_GOLD, size=12, opacity=0.8),
+                                    ft.Text(
+                                        f"{(total_expense / (total_income + total_expense) * 100):.0f}% Das Suas Despesas"
+                                        
+                                        if (total_income + total_expense) > 0 else "Sem dados suficientes",
+                                        color=SOFT_GOLD,
+                                        size=14,
+                                        weight=ft.FontWeight.W_500,
                                     ),
                                 ],
                                 spacing=4,
@@ -191,140 +213,27 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                                     ft.BarChart(
                                         bar_groups=[
                                             ft.BarChartGroup(
-                                                x=0,
+                                                x=i,
                                                 bar_rods=[
                                                     ft.BarChartRod(
                                                         from_y=0,
-                                                        to_y=4000,
+                                                        to_y=receitas_por_dia[i],
                                                         width=20,
                                                         color=GREEN,
-                                                        tooltip="Receitas - Segunda",
+                                                        tooltip=f"Receitas - {dias_semana[i]}",
                                                     ),
                                                     ft.BarChartRod(
                                                         from_y=0,
-                                                        to_y=2000,
+                                                        to_y=despesas_por_dia[i],
                                                         width=20,
                                                         color=RED,
-                                                        tooltip="Despesas - Segunda",
+                                                        tooltip=f"Despesas - {dias_semana[i]}",
                                                     ),
                                                 ],
-                                            ),
-                                            ft.BarChartGroup(
-                                                x=1,
-                                                bar_rods=[
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=3000,
-                                                        width=20,
-                                                        color=GREEN,
-                                                        tooltip="Receitas - Terça",
-                                                    ),
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=1500,
-                                                        width=20,
-                                                        color=RED,
-                                                        tooltip="Despesas - Terça",
-                                                    ),
-                                                ],
-                                            ),
-                                            ft.BarChartGroup(
-                                                x=2,
-                                                bar_rods=[
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=5000,
-                                                        width=20,
-                                                        color=GREEN,
-                                                        tooltip="Receitas - Quarta",
-                                                    ),
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=2500,
-                                                        width=20,
-                                                        color=RED,
-                                                        tooltip="Despesas - Quarta",
-                                                    ),
-                                                ],
-                                            ),
-                                            ft.BarChartGroup(
-                                                x=3,
-                                                bar_rods=[
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=4500,
-                                                        width=20,
-                                                        color=GREEN,
-                                                        tooltip="Receitas - Quinta",
-                                                    ),
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=3000,
-                                                        width=20,
-                                                        color=RED,
-                                                        tooltip="Despesas - Quinta",
-                                                    ),
-                                                ],
-                                            ),
-                                            ft.BarChartGroup(
-                                                x=4,
-                                                bar_rods=[
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=6000,
-                                                        width=20,
-                                                        color=GREEN,
-                                                        tooltip="Receitas - Sexta",
-                                                    ),
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=3500,
-                                                        width=20,
-                                                        color=RED,
-                                                        tooltip="Despesas - Sexta",
-                                                    ),
-                                                ],
-                                            ),
-                                            ft.BarChartGroup(
-                                                x=5,
-                                                bar_rods=[
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=2000,
-                                                        width=20,
-                                                        color=GREEN,
-                                                        tooltip="Receitas - Sábado",
-                                                    ),
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=1000,
-                                                        width=20,
-                                                        color=RED,
-                                                        tooltip="Despesas - Sábado",
-                                                    ),
-                                                ],
-                                            ),
-                                            ft.BarChartGroup(
-                                                x=6,
-                                                bar_rods=[
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=3000,
-                                                        width=20,
-                                                        color=GREEN,
-                                                        tooltip="Receitas - Domingo",
-                                                    ),
-                                                    ft.BarChartRod(
-                                                        from_y=0,
-                                                        to_y=1500,
-                                                        width=20,
-                                                        color=RED,
-                                                        tooltip="Despesas - Domingo",
-                                                    ),
-                                                ],
-                                            ),
+                                            )
+                                            for i in range(7)
                                         ],
-                                        max_y=7000,
+                                        max_y=max(receitas_por_dia + despesas_por_dia + [1]),  # Evita max_y=0
                                         height=200,
                                         width=350,
                                     ),
@@ -342,6 +251,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable) -> ft.Containe
                             color=SOFT_GOLD,
                         ),
                     ],
+                    scroll=ft.ScrollMode.AUTO,
                 ),
                 get_navbar(page, active_index=1),
             ]
