@@ -1,97 +1,172 @@
-import os
-import json
+from storage.database_connect import DatabaseConnection
 
-# Caminho do arquivo para armazenar os dados dos usuários
-USER_DATA_FILE = os.path.join(os.path.dirname(__file__), "users.txt")
-TRANSACTIONS_FILE = os.path.join(os.path.dirname(__file__), "transactions.txt")
-
-def load_transactions(user_id):
-    if os.path.exists(TRANSACTIONS_FILE):
-        with open(TRANSACTIONS_FILE, "r", encoding="utf-8") as file:
-            transactions = json.load(file)
-            return [t for t in transactions if t.get("user_id") == user_id]  # Filtra pelo ID do usuário
-    return []
-    
-def save_transactions(transaction):
-    """
-    Salva uma nova transação no arquivo.
-    """
-    transactions = load_transactions(transaction.get("user_id"))
-    transactions.append(transaction)  # Adiciona a nova transação
-    with open(TRANSACTIONS_FILE, "w", encoding="utf-8") as file:
-        json.dump(transactions, file, indent=4)
-
-# Função para carregar os usuários do arquivo
-def load_users():
-    if os.path.exists(USER_DATA_FILE):
-        with open(USER_DATA_FILE, "r", encoding="utf-8") as file:
-            return json.load(file)
-    return {}
-
-# Função para salvar os usuários no arquivo
-def save_users(users):
-    with open(USER_DATA_FILE, "w", encoding="utf-8") as file:
-        json.dump(users, file, indent=4)
-
-# Carregar os usuários ao iniciar
-users = load_users()
-
-def register_user(user_id, name, email, password):
-    """
-    Registra um novo usuário com nome, email e senha.
-    """
-    if email in users:
-        return False, "E-mail já registrado."
-    users[user_id] = {
-        'id': user_id,
-        'name': name,
-        'email': email,
-        'password': password,
-        'phone': None,  # Inicializa o telefone como None
-    }
-    save_users(users)  # Salvar os dados atualizados no arquivo
-    return True, "Usuário registrado com sucesso."
+db = DatabaseConnection()
 
 def authenticate_user(email, password):
+    """Autentica um usuário"""
+    query = "SELECT id, name, email, phone FROM users WHERE email = %s AND password = %s"
+    result = db.fetch_one(query, (email, password))
+    if result:
+        return True, {
+            'id': result[0],      # id está no índice 0
+            'name': result[1],    # nome está no índice 1
+            'email': result[2],   # email está no índice 2
+            'phone': result[3]    # telefone está no índice 3
+        }
+    return False, "Credenciais inválidas"
+
+def register_user(user_id, name, email, password):
+    """Registra um novo usuário"""
+    # Primeiro verifica se o email já existe
+    check_query = "SELECT id FROM users WHERE email = %s"
+    if db.fetch_one(check_query, (email,)):
+        return False, "Email já registrado"
+    
+    query = """
+    INSERT INTO users (id, name, email, password, phone)
+    VALUES (%s, %s, %s, %s, NULL)
     """
-    Autentica um usuário com email e senha.
-    """
-    for user in users.values():  # Itera sobre os valores do dicionário
-        if user['email'] == email and user['password'] == password:
-            return True, user  # Retorna o usuário autenticado
-    return False, "Credenciais inválidas."
+    success, message = db.execute_query(query, (user_id, name, email, password))
+    if success:
+        return True, "Usuário registrado com sucesso"
+    return False, message
 
 def get_user_by_id(user_id):
-    """
-    Retorna os dados do usuário pelo ID.
-    """
-    return users.get(user_id, None)  # Retorna None se o usuário não for encontrado
+    """Retorna os dados do usuário pelo ID"""
+    query = "SELECT id, name, email, phone FROM users WHERE id = %s"
+    result = db.fetch_one(query, (user_id,))
+    if result:
+        return {
+            'id': result[0],
+            'name': result[1],
+            'email': result[2],
+            'phone': result[3]
+        }
+    return None
 
 def get_user_credentials(user_id):
-            """
-            Retorna o nome, email e senha atuais do usuário.
-            """
-            user = get_user_by_id(user_id)
-            if user:
-                return user['name'], user['email'], user['password'], user['phone']
-            return None, None, None
+    """Retorna as credenciais do usuário"""
+    query = "SELECT name, email, password, phone FROM users WHERE id = %s"
+    result = db.fetch_one(query, (user_id,))
+    if result:
+        return result[0], result[1], result[2], result[3]
+    return None, None, None, None
 
-def update_user(user_id, name=None, email=None, password=None, phone=None):
-    """
-    Atualiza os dados do usuário.
-    """
-    if user_id not in users:
-        return False, "Usuário não encontrado."
-    if email and email != users[user_id]['email']:
-        if email in [user['email'] for user in users.values()]:
-            return False, "E-mail já registrado."
+def update_user(user_id, name=None, email=None, phone=None):
+    """Atualiza os dados do usuário"""
+    if not any([name, email, phone]):
+        return False, "Nenhum dado para atualizar"
+    
+    updates = []
+    params = []
+    
     if name:
-        users[user_id]['name'] = name
+        updates.append("name = %s")
+        params.append(name)
     if email:
-        users[user_id]['email'] = email
-    if password:
-        users[user_id]['password'] = password
+        # Verifica se o email já existe
+        check_query = "SELECT id FROM users WHERE email = %s AND id != %s"
+        if db.fetch_one(check_query, (email, user_id)):
+            return False, "Email já registrado"
+        updates.append("email = %s")
+        params.append(email)
     if phone:
-        users[user_id]['phone'] = phone
-    save_users(users)  # Salvar os dados atualizados no arquivo
-    return True, "Usuário atualizado com sucesso."
+        updates.append("phone = %s")
+        params.append(phone)
+    
+    params.append(user_id)
+    query = f"UPDATE users SET {', '.join(updates)} WHERE id = %s"
+    return db.execute_query(query, params)
+
+def load_transactions(user_id):
+    """Carrega as transações de um usuário específico"""
+    query = """
+        SELECT 
+            type, amount, description, category, 
+            TO_CHAR(date, 'DD/MM/YYYY HH24:MI') as formatted_date
+        FROM transactions 
+        WHERE user_id = %s 
+        ORDER BY date DESC
+    """
+    results = db.fetch_all(query, (user_id,))
+    if not results:
+        return []
+    
+    return [
+        {
+            'type': row[0],
+            'value': float(row[1]),
+            'description': row[2],
+            'category': row[3],
+            'date': row[4]
+        }
+        for row in results
+    ]
+
+def save_transactions(transaction_data):
+    """Salva uma nova transação"""
+    query = """
+        INSERT INTO transactions 
+        (user_id, type, amount, description, category)
+        VALUES (%s, %s, %s, %s, %s)
+    """
+    
+    # Converte 'value' para 'amount' para corresponder ao schema do banco
+    amount = transaction_data.get('value', 0.0)
+    
+    params = (
+        transaction_data.get('user_id'),
+        transaction_data.get('type'),
+        amount,
+        transaction_data.get('description'),
+        transaction_data.get('category')
+    )
+    
+    try:
+        success, message = db.execute_query(query, params)
+        if success:
+            print("✅ Transação salva com sucesso!")
+            return True, "Transação salva com sucesso"
+        return False, message
+    except Exception as e:
+        error_msg = f"Erro ao salvar transação: {str(e)}"
+        print(f"❌ {error_msg}")
+        return False, error_msg
+
+def get_transaction_summary(user_id):
+    """Retorna um resumo das transações do usuário"""
+    query = """
+        SELECT 
+            type,
+            SUM(amount) as total,
+            COUNT(*) as count
+        FROM transactions 
+        WHERE user_id = %s 
+        GROUP BY type
+    """
+    results = db.fetch_all(query, (user_id,))
+    if not results:
+        return {
+            'receitas': 0.0,
+            'despesas': 0.0,
+            'total_receitas': 0,
+            'total_despesas': 0
+        }
+    
+    summary = {
+        'receitas': 0.0,
+        'despesas': 0.0,
+        'total_receitas': 0,
+        'total_despesas': 0
+    }
+    
+    for row in results:
+        tipo, valor, quantidade = row
+        if tipo == 'receita':
+            summary['receitas'] = float(valor)
+            summary['total_receitas'] = quantidade
+        else:
+            summary['despesas'] = float(valor)
+            summary['total_despesas'] = quantidade
+    
+    return summary

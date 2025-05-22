@@ -1,6 +1,6 @@
 import flet as ft
-from components.navbar import get_navbar
 import datetime
+from components.navbar import get_navbar
 
 def get_analysis_screen(page: ft.Page, on_notification: callable, transactions: list) -> ft.Container:
     # Definindo cores personalizadas
@@ -14,33 +14,41 @@ def get_analysis_screen(page: ft.Page, on_notification: callable, transactions: 
     GREEN = "#00FF00"
     RED = "#FF3E3E"
     
-    #calculos
+    # Cálculos financeiros
     total_income = sum(t["value"] for t in transactions if t["type"] == "receita")
     total_expense = sum(t["value"] for t in transactions if t["type"] == "despesa")
     balance = total_income - total_expense
-    percent_expense = (total_expense / (total_income + total_expense)) if (total_income + total_expense) > 0 else 0
+    total_movement = total_income + total_expense
+    expense_percentage = (total_expense / total_movement * 100) if total_movement > 0 else 0
     
     # Dias da semana em português
     dias_semana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"]
-
-    # Inicializa os valores
+    
+    # Inicializa os valores para o gráfico
     receitas_por_dia = [0] * 7
     despesas_por_dia = [0] * 7
-
+    
+    # Processa as transações para o gráfico
     for t in transactions:
         try:
-            data = datetime.datetime.strptime(t["date"], "%d/%m/%Y")
-            idx = (data.weekday())  # 0=Segunda, 6=Domingo
+            # Ajuste aqui para usar o formato correto da data do banco
+            data = datetime.datetime.strptime(t["date"], "%d/%m/%Y %H:%M")
+            dia_semana = data.weekday()  # 0=Segunda, 6=Domingo
+            
             if t["type"] == "receita":
-                receitas_por_dia[idx] += t["value"]
+                receitas_por_dia[dia_semana] += float(t["value"])
             elif t["type"] == "despesa":
-                despesas_por_dia[idx] += t["value"]
-        except Exception:
-            pass  # Ignora datas inválidas
-
+                despesas_por_dia[dia_semana] += float(t["value"])
+        except (ValueError, KeyError) as e:
+            print(f"Erro ao processar data da transação: {e}")
+            continue
+    
+    def handle_back(e):
+        page.go("/home")
+    
     def handle_notification(e):
         on_notification()
-
+    
     return ft.Container(
         width=400,
         height=830,
@@ -59,6 +67,7 @@ def get_analysis_screen(page: ft.Page, on_notification: callable, transactions: 
                                     icon=ft.icons.ARROW_BACK,
                                     icon_color=SOFT_GOLD,
                                     icon_size=22,
+                                    on_click=handle_back,
                                 ),
                                 ft.Text(
                                     "Análise",
