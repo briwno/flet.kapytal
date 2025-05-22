@@ -73,7 +73,7 @@ def get_user_credentials(user_id):
             """
             user = get_user_by_id(user_id)
             if user:
-                return user['name'], user['email'], user['password']
+                return user['name'], user['email'], user['password'], user['phone']
             return None, None, None
 
 def update_user(user_id, name=None, email=None, password=None, phone=None):

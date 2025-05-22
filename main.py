@@ -21,9 +21,20 @@ from screens.settings_screen import get_theme_settings_screen
 from layout import create_iphone_layout
 from storage.data.user_data import register_user, authenticate_user, save_transactions, load_transactions
 from api.api_code import get_brazil_news, get_currency_rates
+from storage.database_connect import connect_to_database
+from storage.database_connect import fetch_query
 
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+# Conexão com o banco de dados
+connection = connect_to_database()
+# Verifica se a conexão foi bem-sucedida
+
+if connection:
+    resultado = fetch_query("SELECT NOW();")
+    print("Hora da conexao: ", resultado)
+
 
 logged_user_id = None  # Variável global para armazenar o ID do usuário logado
 

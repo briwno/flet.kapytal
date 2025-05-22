@@ -14,9 +14,7 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
     nome, email, phone = user_credentials[0], user_credentials[1], user_credentials[3]
 
     def handle_back(e):
-        if len(page.views) > 1:
-            page.views.pop()
-            page.update()
+        page.go("/profile")
 
     def handle_logout(e):
         on_logout()
