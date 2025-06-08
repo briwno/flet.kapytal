@@ -14,7 +14,32 @@ def translate_text(text, target_language="pt"):
 
 # Função para obter notícias econômicas do Brasil
 def get_brazil_news():
-    #  URL da API de notícias
+    # Dados genéricos de notícias para teste
+    generic_news = [
+        {
+            'title': 'Mercado de ações brasileiro registra alta expressiva',
+            'description': 'O Ibovespa subiu mais de 2% nesta quarta-feira, impulsionado por boas notícias econômicas.',
+            'url': 'https://exemplo.com/noticia1',
+            'publishedAt': '2024-03-20T10:00:00Z'
+        },
+        {
+            'title': 'Dólar opera em queda frente ao real',
+            'description': 'Moeda americana recua para R$ 4,95 após dados positivos da economia brasileira.',
+            'url': 'https://exemplo.com/noticia2',
+            'publishedAt': '2024-03-20T09:30:00Z'
+        },
+        {
+            'title': 'Taxa Selic mantida em 11,75% ao ano',
+            'description': 'Comitê de Política Monetária do Banco Central mantém juros básicos da economia.',
+            'url': 'https://exemplo.com/noticia3',
+            'publishedAt': '2024-03-20T09:00:00Z'
+        }
+    ]
+    return generic_news
+
+    # Código original comentado
+    """
+    # URL da API de notícias
     url = 'https://newsapi.org/v2/top-headlines'
     # Parâmetros para a requisição, incluindo a categoria e a chave da API
     params = {
@@ -47,9 +72,36 @@ def get_brazil_news():
                 'publishedAt': article.get('publishedAt', 'Data não disponível')
             })
         return translated_articles
+    """
 
 # Função para obter a cotação do USD
 def get_currency_rates():
+    # Dados genéricos de cotações para teste
+    return {
+        "USD": {
+            "compra": 4.95,
+            "venda": 4.97,
+            "data": "2024-03-20 10:00:00",
+        },
+        "EUR": {
+            "compra": 5.35,
+            "venda": 5.37,
+            "data": "2024-03-20 10:00:00",
+        },
+        "BTC": {
+            "compra": 325000.00,
+            "venda": 326000.00,
+            "data": "2024-03-20 10:00:00",
+        },
+        "ARS": {
+            "compra": 0.0058,
+            "venda": 0.0059,
+            "data": "2024-03-20 10:00:00",
+        }
+    }
+
+    # Código original comentado
+    """
     url = "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,ARS-BRL"
     response = requests.get(url)
 
@@ -76,7 +128,7 @@ def get_currency_rates():
                 "venda": float(data["ARSBRL"]["ask"]),
                 "data": data["ARSBRL"]["create_date"],
             },
-            
         }
     else:
         return {"error": f"Erro ao buscar cotações: {response.status_code}"}
+    """

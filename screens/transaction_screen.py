@@ -106,6 +106,47 @@ def get_transaction_screen(page: ft.Page, on_back: callable, user_id: str) -> ft
                             ],
                             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                         ),
+                        ft.Container(
+                            content=ft.Row(
+                                [
+                                    ft.Container(
+                                        content=ft.IconButton(
+                                            icon=ft.icons.ADD,
+                                            icon_color=DARK_BG,
+                                            icon_size=24,
+                                            on_click=handle_add_transaction,
+                                        ),
+                                        bgcolor=SOFT_GOLD,
+                                        shape=ft.BoxShape.CIRCLE,
+                                        width=50,
+                                        height=50,
+                                        alignment=ft.alignment.center,
+                                    ),
+                                    ft.Container(width=10),
+                                    ft.Container(
+                                        content=ft.IconButton(
+                                            icon=ft.icons.REPEAT,
+                                            icon_color=DARK_BG,
+                                            icon_size=24,
+                                            on_click=lambda _: page.go("/recurring"),
+                                        ),
+                                        bgcolor=SOFT_GOLD,
+                                        shape=ft.BoxShape.CIRCLE,
+                                        width=50,
+                                        height=50,
+                                        alignment=ft.alignment.center,
+                                    ),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                            margin=ft.margin.only(bottom=20, top=10),
+                            alignment=ft.alignment.center,
+                        ),
+                        ft.Text("Adicione uma nova transação clicando no botão acima.",
+                                size=14,
+                                color=SOFT_GOLD,
+                                text_align=ft.TextAlign.CENTER,
+                                ),
                         ft.Container(height=20),
                         ft.Column(
                             [
@@ -119,28 +160,14 @@ def get_transaction_screen(page: ft.Page, on_back: callable, user_id: str) -> ft
                                 )
                                 for t in transactions
                             ],
-                            scroll=ft.ScrollMode.AUTO,
                             spacing=0,
                         ),
-                        ft.Container(
-                            content=ft.Container(
-                                content=ft.IconButton(
-                                    icon=ft.icons.ADD,
-                                    icon_color=DARK_BG,
-                                    icon_size=24,
-                                    on_click=handle_add_transaction,
-                                ),
-                                bgcolor=SOFT_GOLD,
-                                shape=ft.BoxShape.CIRCLE,
-                                width=50,
-                                height=50,
-                                alignment=ft.alignment.center,
-                            ),
-                            margin=ft.margin.only(bottom=80),
-                            alignment=ft.alignment.center,
-                        ),
+
+                        ft.Container(height=50),
+
                     ],
                     expand=True,
+                    scroll=ft.ScrollMode.AUTO,
                 ),
                 # Navbar fixa
                 get_navbar(page, active_index=2),
