@@ -1,7 +1,7 @@
 import flet as ft
 from components.navbar import get_navbar
 
-def get_info_screen(page: ft.Page, on_back: callable, on_logout: callable) -> ft.Container:
+def get_info_screen(page: ft.Page, on_back: callable) -> ft.Container:
     # Definindo cores personalizadas
     GOLD = "#FFD700"
     SOFT_GOLD = "#F7D679"

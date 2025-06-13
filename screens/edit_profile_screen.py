@@ -1,49 +1,35 @@
 import flet as ft
 from components.navbar import get_navbar
-from storage.data.user_data import get_user_credentials, update_user
+from storage.data.user_data import get_user_by_id
 
-def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callable, user_id: str) -> ft.Container:
+def get_edit_profile_screen(page: ft.Page, on_back: callable, on_save: callable, user_id: str) -> ft.Container:
     # Definindo cores personalizadas
-    GOLD = "#FFD700"
     SOFT_GOLD = "#F7D679"
     DARK_BG = "#121212"
     CARD_BG = "#1A1A1A"
-    ICON_BG = "#262626"
 
-    user_credentials = get_user_credentials(user_id)
-    nome, email, phone = user_credentials[0], user_credentials[1], user_credentials[3]
+    # Busca os dados do usuário de forma consistente com o cache
+    user_data = get_user_by_id(user_id)
+    if not user_data:
+        return ft.Container(content=ft.Text("Usuário não encontrado.", color="red"))
 
-    def handle_back(e):
-        page.go("/profile")
-
-    def handle_logout(e):
-        on_logout()
+    nome = user_data.get("name", "")
+    email = user_data.get("email", "")
+    phone = user_data.get("phone", "")
 
     def handle_save(e):
-        if name_input.value and email_input.value and phone_input.value:
-            success, message = update_user(
-                user_id,
-                name=name_input.value,
-                email=email_input.value,
-                phone=phone_input.value,  # Adiciona o telefone
-            )
-            if success:
-                print("Dados atualizados com sucesso!")
-                page.go("/profile")
-            else:
-                print(f"Erro: {message}")
-        else:
-            print("Preencha todos os campos.")
+        # Chama a função de salvar passada como parâmetro
+        on_save(name_input.value, email_input.value, phone_input.value)
 
     # Campos de entrada para edição de perfil
     name_input = ft.TextField(
-        label="Nome", hint_text=nome, value=nome, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
+        label="Nome", value=nome, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
     )
     email_input = ft.TextField(
-        label="E-mail", hint_text=email, value=email, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
+        label="E-mail", value=email, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
     )
     phone_input = ft.TextField(
-        label="Telefone", hint_text="+55 41 99861 9866", value=phone, bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
+        label="Telefone", value=phone or "", hint_text="+55 41 99861 9866", bgcolor=CARD_BG, border_radius=10, color=SOFT_GOLD
     )
 
     return ft.Container(
@@ -63,7 +49,7 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
                                 ft.IconButton(
                                     icon=ft.icons.ARROW_BACK,
                                     icon_color=SOFT_GOLD,
-                                    on_click=handle_back,
+                                    on_click=lambda _: on_back(),
                                 ),
                                 ft.Text(
                                     "Editar Perfil",
@@ -71,11 +57,8 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
                                     weight=ft.FontWeight.BOLD,
                                     color=SOFT_GOLD,
                                 ),
-                                ft.IconButton(
-                                    icon=ft.icons.LOGOUT,
-                                    icon_color=SOFT_GOLD,
-                                    on_click=handle_logout,
-                                ),
+                                # Espaço para manter o alinhamento do título
+                                ft.Container(width=40),
                             ],
                             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                         ),
@@ -113,5 +96,3 @@ def get_edit_profile_screen(page: ft.Page, on_back: callable, on_logout: callabl
             ],
         ),
     )
-
-

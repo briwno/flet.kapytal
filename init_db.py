@@ -24,6 +24,20 @@ def create_tables():
             date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """
+    
+    create_recurring_transactions = """
+        CREATE TABLE IF NOT EXISTS recurring_transactions (
+            id SERIAL PRIMARY KEY,
+            user_id VARCHAR(36) REFERENCES users(id),
+            type VARCHAR(10) NOT NULL,
+            amount DECIMAL(10, 2) NOT NULL,
+            description TEXT,
+            category VARCHAR(50),
+            frequency VARCHAR(10) NOT NULL, -- 'daily', 'weekly', 'monthly'
+            start_date TIMESTAMP NOT NULL,
+            is_active BOOLEAN DEFAULT TRUE
+        );
+    """
 
     success, message = db.execute_query(create_users)
     if success:
@@ -36,6 +50,12 @@ def create_tables():
         print("✅ Tabela de transações criada com sucesso.")
     else:
         print(f"❌ Erro ao criar tabela de transações: {message}")
+
+    success, message = db.execute_query(create_recurring_transactions)
+    if success:
+        print("✅ Tabela de transações recorrentes criada com sucesso.")
+    else:
+        print(f"❌ Erro ao criar tabela de transações recorrentes: {message}")
 
 if __name__ == "__main__":
     print("Iniciando criação das tabelas...")

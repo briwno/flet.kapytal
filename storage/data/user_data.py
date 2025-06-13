@@ -107,21 +107,21 @@ def save_transactions(transaction_data):
     """Salva uma nova transação"""
     query = """
         INSERT INTO transactions 
-        (user_id, type, amount, description, category)
-        VALUES (%s, %s, %s, %s, %s)
+        (user_id, type, amount, description, category, date)
+        VALUES (%s, %s, %s, %s, %s, %s)
     """
-    
-    # Converte 'value' para 'amount' para corresponder ao schema do banco
+
     amount = transaction_data.get('value', 0.0)
-    
+
     params = (
         transaction_data.get('user_id'),
         transaction_data.get('type'),
         amount,
         transaction_data.get('description'),
-        transaction_data.get('category')
+        transaction_data.get('category'),
+        transaction_data.get('date')
     )
-    
+
     try:
         success, message = db.execute_query(query, params)
         if success:
@@ -132,6 +132,60 @@ def save_transactions(transaction_data):
         error_msg = f"Erro ao salvar transação: {str(e)}"
         print(f"❌ {error_msg}")
         return False, error_msg
+
+def save_recurring_transaction(rec_transaction_data):
+    """Salva uma nova transação recorrente."""
+    query = """
+        INSERT INTO recurring_transactions
+        (user_id, type, amount, description, category, frequency, start_date)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+    """
+    params = (
+        rec_transaction_data.get('user_id'),
+        rec_transaction_data.get('type'),
+        rec_transaction_data.get('value'),
+        rec_transaction_data.get('description'),
+        rec_transaction_data.get('category'),
+        rec_transaction_data.get('frequency'),
+        rec_transaction_data.get('date')
+    )
+    success, message = db.execute_query(query, params)
+    if success:
+        print("✅ Transação recorrente salva com sucesso!")
+        return True, "Transação recorrente salva com sucesso"
+    return False, message
+
+def load_recurring_transactions(user_id):
+    """Carrega as transações recorrentes ativas de um usuário."""
+    query = """
+        SELECT id, type, amount, description, category, frequency, TO_CHAR(start_date, 'DD/MM/YYYY')
+        FROM recurring_transactions
+        WHERE user_id = %s AND is_active = TRUE
+        ORDER BY start_date DESC
+    """
+    results = db.fetch_all(query, (user_id,))
+    if not results:
+        return []
+
+    return [
+        {
+            'id': row[0],
+            'type': row[1],
+            'value': float(row[2]),
+            'description': row[3],
+            'category': row[4],
+            'frequency': row[5],
+            'start_date': row[6]
+        }
+        for row in results
+    ]
+
+def deactivate_recurring_transaction(recurring_id):
+    """Desativa uma transação recorrente."""
+    query = "UPDATE recurring_transactions SET is_active = FALSE WHERE id = %s"
+    success, message = db.execute_query(query, (recurring_id,))
+    return success, message
+
 
 def get_transaction_summary(user_id):
     """Retorna um resumo das transações do usuário"""
