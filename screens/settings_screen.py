@@ -98,13 +98,6 @@ def get_settings_screen(page: ft.Page, on_back: callable, on_logout: callable) -
                                         on_click=lambda _: page.go("/notifications_settings"),
                                     ),
                                     settings_option(
-                                        icon=ft.icons.CONTRAST,
-                                        text="Tema",
-                                        color=SOFT_GOLD,
-                                        bgcolor=ICON_BG,
-                                        on_click=lambda _: page.go("/theme_settings"),
-                                    ),
-                                    settings_option(
                                         icon=ft.icons.LOGOUT,
                                         text="Sair",
                                         color=SOFT_GOLD,
@@ -308,50 +301,6 @@ def get_notifications_settings_screen(page: ft.Page, on_back: callable) -> ft.Co
                     ),
                     ft.Switch(label="Notificações por E-mail", value=True),
                     ft.Switch(label="Notificações Push", value=False),
-                ],
-                spacing=20,
-            ),
-        ),
-    )
-    
-def get_theme_settings_screen(page: ft.Page, on_back: callable) -> ft.Container:
-    DARK_BG = "#121212"
-    SOFT_GOLD = "#F7D679"
-
-    return ft.Container(
-        width=400,
-        height=830,
-        bgcolor=DARK_BG,
-        border_radius=ft.border_radius.all(35),
-        content=ft.Container(  # Adicionado Container para padding
-            padding=20,
-            content=ft.Column(
-                [
-                    ft.Row(
-                        [
-                            ft.IconButton(
-                                icon=ft.icons.ARROW_BACK,
-                                icon_color=SOFT_GOLD,
-                                on_click=lambda _: on_back(),
-                            ),
-                            ft.Text(
-                                "Configurações de Tema",
-                                size=20,
-                                weight=ft.FontWeight.BOLD,
-                                color=SOFT_GOLD,
-                            ),
-                        ],
-                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                    ),
-                    ft.RadioGroup(
-                        value="dark",
-                        content=ft.Column(  # Envolvendo os itens em um Column
-                            controls=[
-                                ft.Radio(value="light", label="Tema Claro"),
-                                ft.Radio(value="dark", label="Tema Escuro"),
-                            ],
-                        ),
-                    ),
                 ],
                 spacing=20,
             ),

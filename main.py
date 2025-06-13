@@ -17,7 +17,6 @@ from screens.transaction_screen import get_transaction_screen
 from screens.edit_profile_screen import get_edit_profile_screen
 from screens.settings_screen import get_change_password_screen
 from screens.settings_screen import get_notifications_settings_screen
-from screens.settings_screen import get_theme_settings_screen
 from layout import create_iphone_layout
 from storage.data.user_data import register_user, authenticate_user, save_transactions, load_transactions
 from api.api_code import get_brazil_news, get_currency_rates
@@ -292,7 +291,6 @@ def main(page: ft.Page):
         elif page.route == "/change_password":
             change_password_screen = get_change_password_screen(
                 page,
-                
                 on_back=lambda: page.go("/settings"),
                 user_id=logged_user_id  # Passa o ID do usuário logado
             )
@@ -312,17 +310,6 @@ def main(page: ft.Page):
                     route="/notifications_settings",
                     controls=[ft.Row([create_iphone_layout(notifications_settings_screen)], alignment=ft.MainAxisAlignment.CENTER)]
                     
-                )
-            )
-        elif page.route == "/theme_settings":
-            theme_settings_screen = get_theme_settings_screen(
-                page,
-                on_back=lambda: page.go("/settings"),
-            )
-            page.views.append(
-                ft.View(
-                    route="/theme_settings",
-                    controls=[ft.Row([create_iphone_layout(theme_settings_screen)], alignment=ft.MainAxisAlignment.CENTER)]
                 )
             )
             
