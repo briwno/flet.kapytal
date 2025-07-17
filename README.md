@@ -7,7 +7,7 @@
 
 O **Kapytal** é um aplicativo de gestão financeira que busca ajudar pessoas e pequenos negócios a organizarem suas finanças de forma prática e intuitiva. A proposta surgiu como parte de um projeto acadêmico da faculdade, com o objetivo de desenvolver um app funcional com tecnologias acessíveis e sem o uso de inteligência artificial.
 
-### ✨ Funcionalidades (Planejadas)
+### ✨ Funcionalidades 
 
 - Cadastro e login de usuários
 - Registro de receitas e despesas
@@ -15,9 +15,7 @@ O **Kapytal** é um aplicativo de gestão financeira que busca ajudar pessoas e 
 - Sugestões financeiras básicas
 - Acompanhamento de saldo e histórico
 - Interface moderna em Flet (Python)
-- Design inspirado em tons **branco**, **preto** e **dourado**
 
-> **Obs:** O projeto ainda está em desenvolvimento. As funcionalidades serão implementadas por etapas.
 
 ## 🧱 Tecnologias Utilizadas
 
