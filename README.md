@@ -27,11 +27,6 @@ O **Kapytal** é um aplicativo de gestão financeira que busca ajudar pessoas e 
 - Figma *(para o protótipo de interface)*
 ## 🌐 APIS Utilizada
 
-### Endpoint Integrado
-
-- **Endpoint:** `https://financialmodelingprep.com/stable/quote?symbol=BTCUSD&apikey=api_key`  
-- **Descrição:** Retorna informações atualizadas sobre o preço do Bitcoin (BTC) em relação ao dólar americano (USD).  
-
 ## 🛠 Como Rodar o Projeto
 
 1. Clone o repositório:
