@@ -25,9 +25,7 @@ O **Kapytal** é um aplicativo de gestão financeira que busca ajudar pessoas e 
 - [Flet](https://flet.dev/) (UI)
 - [MySQL](https://www.mysql.com/) *(planejado para o backend)*
 - Figma *(para o protótipo de interface)*
-## 🌐 API Utilizada
-
-O projeto utiliza a API da [Financial Modeling Prep](https://financialmodelingprep.com/) para obter dados financeiros em tempo real.  
+## 🌐 APIS Utilizada
 
 ### Endpoint Integrado
 
@@ -63,5 +61,4 @@ Desenvolvido por **[briwno](https://github.com/briwno)** como parte de um projet
 
 ## 📌 Status do Projeto
 
-🚧 **Em desenvolvimento**  
-Atualmente, estou focando na construção da interface e estrutura das telas antes da integração com banco de dados e autenticação de usuários.
+✅ **Finalizado**  
